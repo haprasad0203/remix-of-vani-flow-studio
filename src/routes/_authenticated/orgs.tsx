@@ -59,7 +59,7 @@ function OrgPicker() {
     }
     setOpen(false);
     setNewName("");
-    window.location.assign(`/orgs/${data.id}/agents`);
+    window.location.assign(`/orgs/${(data as { id: string }).id}/agents`);
   }
 
   return (
