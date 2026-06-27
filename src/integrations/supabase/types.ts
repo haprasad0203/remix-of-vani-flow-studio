@@ -189,6 +189,20 @@ export type Database = {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean
       }
+      create_organization: {
+        Args: { _name: string }
+        Returns: {
+          created_at: string
+          id: string
+          name: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "organizations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       flow_org: { Args: { _flow_id: string }; Returns: string }
       is_org_member: {
         Args: { _org_id: string; _user_id: string }
