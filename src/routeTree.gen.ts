@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId'
+import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -47,20 +48,28 @@ const AuthenticatedOrgsOrgIdAgentsAgentIdRoute =
     path: '/$agentId',
     getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
+const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute =
+  AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport.update({
+    id: '/flows/$flowId',
+    path: '/flows/$flowId',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsAgentIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
-  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
+  '/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
-  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
+  '/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,7 +78,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
-  '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+  '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
+  '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,6 +89,7 @@ export interface FileRouteTypes {
     | '/orgs'
     | '/orgs/$orgId/agents'
     | '/orgs/$orgId/agents/$agentId'
+    | '/orgs/$orgId/agents/$agentId/flows/$flowId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -86,6 +97,7 @@ export interface FileRouteTypes {
     | '/orgs'
     | '/orgs/$orgId/agents'
     | '/orgs/$orgId/agents/$agentId'
+    | '/orgs/$orgId/agents/$agentId/flows/$flowId'
   id:
     | '__root__'
     | '/'
@@ -94,6 +106,7 @@ export interface FileRouteTypes {
     | '/_authenticated/orgs'
     | '/_authenticated/orgs/$orgId/agents'
     | '/_authenticated/orgs/$orgId/agents/$agentId'
+    | '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -146,17 +159,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
+    '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId': {
+      id: '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId'
+      path: '/flows/$flowId'
+      fullPath: '/orgs/$orgId/agents/$agentId/flows/$flowId'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+    }
   }
 }
 
+interface AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren {
+  AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute
+}
+
+const AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren: AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren =
+  {
+    AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute,
+  }
+
+const AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren =
+  AuthenticatedOrgsOrgIdAgentsAgentIdRoute._addFileChildren(
+    AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren,
+  )
+
 interface AuthenticatedOrgsOrgIdAgentsRouteChildren {
-  AuthenticatedOrgsOrgIdAgentsAgentIdRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+  AuthenticatedOrgsOrgIdAgentsAgentIdRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
 }
 
 const AuthenticatedOrgsOrgIdAgentsRouteChildren: AuthenticatedOrgsOrgIdAgentsRouteChildren =
   {
     AuthenticatedOrgsOrgIdAgentsAgentIdRoute:
-      AuthenticatedOrgsOrgIdAgentsAgentIdRoute,
+      AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren,
   }
 
 const AuthenticatedOrgsOrgIdAgentsRouteWithChildren =
