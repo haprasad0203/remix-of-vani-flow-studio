@@ -50,9 +50,7 @@ function OrgPicker() {
     if (!newName.trim()) return;
     setCreating(true);
     const { data, error } = await supabase
-      .from("organizations")
-      .insert({ name: newName.trim() })
-      .select("id")
+      .rpc("create_organization", { _name: newName.trim() })
       .single();
     setCreating(false);
     if (error) {
