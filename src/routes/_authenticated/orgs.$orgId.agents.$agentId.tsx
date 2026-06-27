@@ -1,0 +1,172 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { AppHeader } from "@/components/AppHeader";
+import { emptyDraft } from "@/lib/flow-types";
+
+export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId")({
+  component: FlowsList,
+});
+
+type Agent = { id: string; name: string; language: string; org_id: string };
+type Flow = {
+  id: string;
+  name: string;
+  updated_at: string;
+  published_version_id: string | null;
+};
+
+function FlowsList() {
+  const { orgId, agentId } = Route.useParams();
+  const [agent, setAgent] = useState<Agent | null>(null);
+  const [flows, setFlows] = useState<Flow[] | null>(null);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [creating, setCreating] = useState(false);
+
+  async function load() {
+    const [a, f] = await Promise.all([
+      supabase
+        .from("agents")
+        .select("id, name, language, org_id")
+        .eq("id", agentId)
+        .maybeSingle(),
+      supabase
+        .from("flows")
+        .select("id, name, updated_at, published_version_id")
+        .eq("agent_id", agentId)
+        .order("updated_at", { ascending: false }),
+    ]);
+    if (a.error) toast.error(a.error.message);
+    if (f.error) toast.error(f.error.message);
+    setAgent(a.data);
+    setFlows(f.data ?? []);
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agentId]);
+
+  async function createFlow(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !agent) return;
+    setCreating(true);
+    const draft = emptyDraft(agentId, agent.language);
+    const { data, error } = await supabase
+      .from("flows")
+      .insert({
+        agent_id: agentId,
+        name: name.trim(),
+        draft_json: draft as never,
+      })
+      .select("id")
+      .single();
+    setCreating(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    setOpen(false);
+    setName("");
+    window.location.assign(`/orgs/${orgId}/agents/${agentId}/flows/${data.id}`);
+  }
+
+  return (
+    <>
+      <AppHeader
+        breadcrumbs={[
+          { label: "Organizations", to: "/orgs" },
+          { label: "Agents", to: "/orgs/$orgId/agents", params: { orgId } },
+          { label: agent?.name ?? "…" },
+        ]}
+      />
+      <main className="mx-auto max-w-5xl px-6 py-10">
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Flows</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Conversation flows for this agent.
+            </p>
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>New flow</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create flow</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={createFlow} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="flow-name">Name</Label>
+                  <Input
+                    id="flow-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="COD confirmation v1"
+                    required
+                  />
+                </div>
+                <DialogFooter>
+                  <Button type="submit" disabled={creating}>
+                    {creating ? "Creating…" : "Create"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="mt-8 space-y-3">
+          {flows === null && <div className="text-sm text-muted-foreground">Loading…</div>}
+          {flows && flows.length === 0 && (
+            <Card className="p-8 text-center text-sm text-muted-foreground">
+              No flows yet. Create your first one.
+            </Card>
+          )}
+          {flows?.map((f) => (
+            <Link
+              key={f.id}
+              to="/orgs/$orgId/agents/$agentId/flows/$flowId"
+              params={{ orgId, agentId, flowId: f.id }}
+            >
+              <Card className="flex items-center justify-between p-5 transition hover:border-foreground/30">
+                <div>
+                  <div className="font-medium">{f.name}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    Updated {new Date(f.updated_at).toLocaleString()}
+                  </div>
+                </div>
+                <div className="text-xs">
+                  {f.published_version_id ? (
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                      Published
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
+                      Draft only
+                    </span>
+                  )}
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </main>
+    </>
+  );
+}
