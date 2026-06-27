@@ -227,9 +227,22 @@ export function nodeSummary(node: FlowNode): string {
   }
 }
 
+function canonical(v: unknown): string {
+  if (v === null || typeof v !== "object") return JSON.stringify(v);
+  if (Array.isArray(v)) return "[" + v.map(canonical).join(",") + "]";
+  const keys = Object.keys(v as Record<string, unknown>).sort();
+  return (
+    "{" +
+    keys
+      .map((k) => JSON.stringify(k) + ":" + canonical((v as Record<string, unknown>)[k]))
+      .join(",") +
+    "}"
+  );
+}
+
 export function draftsEqual(a: unknown, b: unknown): boolean {
   try {
-    return JSON.stringify(a) === JSON.stringify(b);
+    return canonical(a) === canonical(b);
   } catch {
     return false;
   }
