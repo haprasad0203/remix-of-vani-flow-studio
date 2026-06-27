@@ -23,7 +23,7 @@ import {
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 
-export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents")({
+export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents//")({
   component: AgentsList,
 });
 

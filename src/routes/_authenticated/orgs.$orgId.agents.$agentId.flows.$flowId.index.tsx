@@ -36,7 +36,7 @@ import { StepConfig } from "@/components/flow-editor/StepConfig";
 import { ChevronDown, ChevronUp, Trash2, ArrowUp, ArrowDown, Plus } from "lucide-react";
 
 export const Route = createFileRoute(
-  "/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId",
+  "/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/",
 )({
   component: FlowEditor,
 });
