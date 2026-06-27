@@ -16,7 +16,7 @@ import {
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 
-export const Route = createFileRoute("/_authenticated/orgs")({
+export const Route = createFileRoute("/_authenticated/orgs/")({
   component: OrgPicker,
 });
 
