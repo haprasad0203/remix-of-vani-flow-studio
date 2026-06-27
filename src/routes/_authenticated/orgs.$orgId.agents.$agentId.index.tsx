@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
 
-export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId//")({
+export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
 });
 
