@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedOrgsIndexRouteImport } from './routes/_authenticated/orgs.index'
+import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
 import { Route as AuthenticatedOrgsOrgIdAgentsIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId.index'
@@ -43,29 +44,35 @@ const AuthenticatedOrgsIndexRoute = AuthenticatedOrgsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedOrgsRoute,
 } as any)
+const AuthenticatedOrgsOrgIdAgentsRoute =
+  AuthenticatedOrgsOrgIdAgentsRouteImport.update({
+    id: '/$orgId/agents',
+    path: '/$orgId/agents',
+    getParentRoute: () => AuthenticatedOrgsRoute,
+  } as any)
 const AuthenticatedOrgsOrgIdAgentsIndexRoute =
   AuthenticatedOrgsOrgIdAgentsIndexRouteImport.update({
-    id: '/$orgId/agents/',
-    path: '/$orgId/agents/',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute =
   AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport.update({
-    id: '/$orgId/agents/$agentId/',
-    path: '/$orgId/agents/$agentId/',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+    id: '/$agentId/',
+    path: '/$agentId/',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute =
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRouteImport.update({
-    id: '/$orgId/agents/$agentId/flows/$flowId/',
-    path: '/$orgId/agents/$agentId/flows/$flowId/',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+    id: '/$agentId/flows/$flowId/',
+    path: '/$agentId/flows/$flowId/',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute =
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRouteImport.update({
-    id: '/$orgId/agents/$agentId/flows/$flowId/versions',
-    path: '/$orgId/agents/$agentId/flows/$flowId/versions',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+    id: '/$agentId/flows/$flowId/versions',
+    path: '/$agentId/flows/$flowId/versions',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -73,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/orgs/': typeof AuthenticatedOrgsIndexRoute
+  '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/orgs/$orgId/agents/': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
   '/orgs/$orgId/agents/$agentId/': typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   '/orgs/$orgId/agents/$agentId/flows/$flowId/versions': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/_authenticated/orgs/': typeof AuthenticatedOrgsIndexRoute
+  '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/_authenticated/orgs/$orgId/agents/': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
   '/_authenticated/orgs/$orgId/agents/$agentId/': typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/orgs'
     | '/orgs/'
+    | '/orgs/$orgId/agents'
     | '/orgs/$orgId/agents/'
     | '/orgs/$orgId/agents/$agentId/'
     | '/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/orgs'
     | '/_authenticated/orgs/'
+    | '/_authenticated/orgs/$orgId/agents'
     | '/_authenticated/orgs/$orgId/agents/'
     | '/_authenticated/orgs/$orgId/agents/$agentId/'
     | '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
@@ -175,55 +186,77 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsIndexRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
     }
+    '/_authenticated/orgs/$orgId/agents': {
+      id: '/_authenticated/orgs/$orgId/agents'
+      path: '/$orgId/agents'
+      fullPath: '/orgs/$orgId/agents'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteImport
+      parentRoute: typeof AuthenticatedOrgsRoute
+    }
     '/_authenticated/orgs/$orgId/agents/': {
       id: '/_authenticated/orgs/$orgId/agents/'
-      path: '/$orgId/agents'
+      path: '/'
       fullPath: '/orgs/$orgId/agents/'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsIndexRouteImport
-      parentRoute: typeof AuthenticatedOrgsRoute
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
     '/_authenticated/orgs/$orgId/agents/$agentId/': {
       id: '/_authenticated/orgs/$orgId/agents/$agentId/'
-      path: '/$orgId/agents/$agentId'
+      path: '/$agentId'
       fullPath: '/orgs/$orgId/agents/$agentId/'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport
-      parentRoute: typeof AuthenticatedOrgsRoute
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
     '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/': {
       id: '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/'
-      path: '/$orgId/agents/$agentId/flows/$flowId'
+      path: '/$agentId/flows/$flowId'
       fullPath: '/orgs/$orgId/agents/$agentId/flows/$flowId/'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRouteImport
-      parentRoute: typeof AuthenticatedOrgsRoute
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
     '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions': {
       id: '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
-      path: '/$orgId/agents/$agentId/flows/$flowId/versions'
+      path: '/$agentId/flows/$flowId/versions'
       fullPath: '/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRouteImport
-      parentRoute: typeof AuthenticatedOrgsRoute
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
   }
 }
 
-interface AuthenticatedOrgsRouteChildren {
-  AuthenticatedOrgsIndexRoute: typeof AuthenticatedOrgsIndexRoute
+interface AuthenticatedOrgsOrgIdAgentsRouteChildren {
   AuthenticatedOrgsOrgIdAgentsIndexRoute: typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute
 }
 
+const AuthenticatedOrgsOrgIdAgentsRouteChildren: AuthenticatedOrgsOrgIdAgentsRouteChildren =
+  {
+    AuthenticatedOrgsOrgIdAgentsIndexRoute:
+      AuthenticatedOrgsOrgIdAgentsIndexRoute,
+    AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute,
+    AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute,
+    AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute,
+  }
+
+const AuthenticatedOrgsOrgIdAgentsRouteWithChildren =
+  AuthenticatedOrgsOrgIdAgentsRoute._addFileChildren(
+    AuthenticatedOrgsOrgIdAgentsRouteChildren,
+  )
+
+interface AuthenticatedOrgsRouteChildren {
+  AuthenticatedOrgsIndexRoute: typeof AuthenticatedOrgsIndexRoute
+  AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+}
+
 const AuthenticatedOrgsRouteChildren: AuthenticatedOrgsRouteChildren = {
   AuthenticatedOrgsIndexRoute: AuthenticatedOrgsIndexRoute,
-  AuthenticatedOrgsOrgIdAgentsIndexRoute:
-    AuthenticatedOrgsOrgIdAgentsIndexRoute,
-  AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute:
-    AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute,
-  AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute:
-    AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute,
-  AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute:
-    AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute,
+  AuthenticatedOrgsOrgIdAgentsRoute:
+    AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
 }
 
 const AuthenticatedOrgsRouteWithChildren =
