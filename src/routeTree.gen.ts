@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
+import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -40,18 +41,26 @@ const AuthenticatedOrgsOrgIdAgentsRoute =
     path: '/$orgId/agents',
     getParentRoute: () => AuthenticatedOrgsRoute,
   } as any)
+const AuthenticatedOrgsOrgIdAgentsAgentIdRoute =
+  AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport.update({
+    id: '/$agentId',
+    path: '/$agentId',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
-  '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRoute
+  '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
-  '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRoute
+  '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,13 +68,24 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
-  '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRoute
+  '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/orgs' | '/orgs/$orgId/agents'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/orgs'
+    | '/orgs/$orgId/agents'
+    | '/orgs/$orgId/agents/$agentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/orgs' | '/orgs/$orgId/agents'
+  to:
+    | '/'
+    | '/auth'
+    | '/orgs'
+    | '/orgs/$orgId/agents'
+    | '/orgs/$orgId/agents/$agentId'
   id:
     | '__root__'
     | '/'
@@ -73,6 +93,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/orgs'
     | '/_authenticated/orgs/$orgId/agents'
+    | '/_authenticated/orgs/$orgId/agents/$agentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +139,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
     }
+    '/_authenticated/orgs/$orgId/agents/$agentId': {
+      id: '/_authenticated/orgs/$orgId/agents/$agentId'
+      path: '/$agentId'
+      fullPath: '/orgs/$orgId/agents/$agentId'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
+    }
   }
 }
 
+interface AuthenticatedOrgsOrgIdAgentsRouteChildren {
+  AuthenticatedOrgsOrgIdAgentsAgentIdRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+}
+
+const AuthenticatedOrgsOrgIdAgentsRouteChildren: AuthenticatedOrgsOrgIdAgentsRouteChildren =
+  {
+    AuthenticatedOrgsOrgIdAgentsAgentIdRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdRoute,
+  }
+
+const AuthenticatedOrgsOrgIdAgentsRouteWithChildren =
+  AuthenticatedOrgsOrgIdAgentsRoute._addFileChildren(
+    AuthenticatedOrgsOrgIdAgentsRouteChildren,
+  )
+
 interface AuthenticatedOrgsRouteChildren {
-  AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
+  AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
 }
 
 const AuthenticatedOrgsRouteChildren: AuthenticatedOrgsRouteChildren = {
-  AuthenticatedOrgsOrgIdAgentsRoute: AuthenticatedOrgsOrgIdAgentsRoute,
+  AuthenticatedOrgsOrgIdAgentsRoute:
+    AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
 }
 
 const AuthenticatedOrgsRouteWithChildren =
