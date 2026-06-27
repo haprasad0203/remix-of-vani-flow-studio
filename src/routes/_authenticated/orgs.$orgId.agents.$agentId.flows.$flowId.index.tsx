@@ -231,7 +231,7 @@ function FlowEditor() {
         .update({ published_version_id: created.id })
         .eq("id", flowId);
       if (uerr) throw uerr;
-      setPublishedJson(created.json);
+      setPublishedJson(draft);
       setPublishedVersionNumber(created.version_number);
       toast.success(`Published v${created.version_number}`);
     } catch (err) {
