@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
+import { VoiceTester } from "@/components/VoiceTester";
 
 export const Route = createFileRoute("/_authenticated/orgs/")({
   component: OrgPicker,
@@ -101,6 +102,10 @@ function OrgPicker() {
             </DialogContent>
           </Dialog>
         </div>
+        <div className="mt-8">
+          <VoiceTester />
+        </div>
+
 
         <div className="mt-8 space-y-3">
           {orgs === null && <div className="text-sm text-muted-foreground">Loading…</div>}
