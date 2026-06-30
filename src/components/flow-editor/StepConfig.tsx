@@ -1,3 +1,5 @@
+import { useState, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   FlowNode,
   FlowDraft,
@@ -6,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -13,6 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { synthesizeSpeech } from "@/lib/sarvam.functions";
+import { toast } from "sonner";
+import { Loader2, Play } from "lucide-react";
 
 interface Props {
   node: FlowNode;
