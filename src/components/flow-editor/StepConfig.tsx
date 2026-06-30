@@ -114,6 +114,25 @@ export function StepConfig({ node, draft, onChange }: Props) {
                 placeholder="hi-IN"
               />
             </Field>
+            <div className="flex items-center gap-3 pt-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={testVoice}
+                disabled={testing}
+              >
+                {testing ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="mr-2 h-4 w-4" />
+                )}
+                {testing ? "Generating…" : "Test voice"}
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                Synthesizes the prompt via Sarvam TTS and plays it here.
+              </span>
+            </div>
           </>
         )}
 
