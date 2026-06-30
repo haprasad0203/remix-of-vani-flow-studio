@@ -102,6 +102,10 @@ function OrgPicker() {
             </DialogContent>
           </Dialog>
         </div>
+        <div className="mt-8">
+          <VoiceTester />
+        </div>
+
 
         <div className="mt-8 space-y-3">
           {orgs === null && <div className="text-sm text-muted-foreground">Loading…</div>}
