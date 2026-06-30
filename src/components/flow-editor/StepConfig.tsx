@@ -1,3 +1,5 @@
+import { useState, useRef } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   FlowNode,
   FlowDraft,
@@ -6,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -13,6 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { synthesizeSpeech } from "@/lib/sarvam.functions";
+import { toast } from "sonner";
+import { Loader2, Play } from "lucide-react";
 
 interface Props {
   node: FlowNode;
@@ -24,10 +30,41 @@ const END_VALUE = "__end__";
 
 export function StepConfig({ node, draft, onChange }: Props) {
   const meta = NODE_TYPE_MAP[node.type];
+  const [testing, setTesting] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const tts = useServerFn(synthesizeSpeech);
+
+  async function testVoice() {
+    const text = ((node.config.prompt_text as string) ?? "").trim();
+    if (!text) {
+      toast.error("Add a prompt before testing");
+      return;
+    }
+    const lang =
+      ((node.config.language_override as string) || "").trim() || draft.language || "en-IN";
+    setTesting(true);
+    try {
+      const { audio_base64, mime_type } = await tts({
+        data: { text, target_language_code: lang },
+      });
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+      const audio = new Audio(`data:${mime_type};base64,${audio_base64}`);
+      audioRef.current = audio;
+      await audio.play();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Voice test failed");
+    } finally {
+      setTesting(false);
+    }
+  }
 
   function setConfig(key: string, value: unknown) {
     onChange({ ...node, config: { ...node.config, [key]: value } });
   }
+
   function setNext(outcome: string, targetId: string) {
     onChange({
       ...node,
@@ -77,6 +114,25 @@ export function StepConfig({ node, draft, onChange }: Props) {
                 placeholder="hi-IN"
               />
             </Field>
+            <div className="flex items-center gap-3 pt-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={testVoice}
+                disabled={testing}
+              >
+                {testing ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="mr-2 h-4 w-4" />
+                )}
+                {testing ? "Generating…" : "Test voice"}
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                Synthesizes the prompt via Sarvam TTS and plays it here.
+              </span>
+            </div>
           </>
         )}
 
