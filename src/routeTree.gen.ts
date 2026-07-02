@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedOrgsIndexRouteImport } from './routes/_authenticated/orgs.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedOrgsRoute = AuthenticatedOrgsRouteImport.update({
   id: '/orgs',
@@ -105,8 +111,9 @@ const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
@@ -120,7 +127,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/orgs': typeof AuthenticatedOrgsIndexRoute
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
@@ -133,8 +141,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/_authenticated/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/orgs'
+    | '/auth/reset-password'
     | '/orgs/'
     | '/orgs/$orgId/agents'
     | '/orgs/$orgId/agents/$agentId'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/auth/reset-password'
     | '/orgs'
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/orgs'
+    | '/auth/reset-password'
     | '/_authenticated/orgs/'
     | '/_authenticated/orgs/$orgId/agents'
     | '/_authenticated/orgs/$orgId/agents/$agentId'
@@ -194,7 +206,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ApiPublicExotelAudioAudioIdRoute: typeof ApiPublicExotelAudioAudioIdRoute
   ApiPublicExotelVoiceAudioIdRoute: typeof ApiPublicExotelVoiceAudioIdRoute
 }
@@ -221,6 +233,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/orgs': {
       id: '/_authenticated/orgs'
@@ -381,23 +400,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   ApiPublicExotelAudioAudioIdRoute: ApiPublicExotelAudioAudioIdRoute,
   ApiPublicExotelVoiceAudioIdRoute: ApiPublicExotelVoiceAudioIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
