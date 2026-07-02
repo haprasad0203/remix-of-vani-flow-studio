@@ -44,8 +44,17 @@ export function AppHeader({
             </span>
           ))}
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          {email && <span className="hidden sm:inline">{email}</span>}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link
+            to="/profile"
+            className="hidden sm:inline hover:text-foreground"
+            title="Your profile"
+          >
+            {email || "Profile"}
+          </Link>
+          <Button variant="ghost" size="sm" asChild className="sm:hidden">
+            <Link to="/profile">Profile</Link>
+          </Button>
           <Button variant="ghost" size="sm" onClick={signOut}>
             Sign out
           </Button>
