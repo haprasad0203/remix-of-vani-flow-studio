@@ -54,6 +54,7 @@ type PublishedVersion = { id: string; version_number: number; json: unknown };
 
 function FlowEditor() {
   const { orgId, agentId, flowId } = Route.useParams();
+  const { role, canEdit, loading: roleLoading } = useOrgRole(orgId);
 
   const [flow, setFlow] = useState<FlowRow | null>(null);
   const [agentName, setAgentName] = useState<string>("");
