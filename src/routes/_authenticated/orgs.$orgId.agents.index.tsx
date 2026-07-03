@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { useOrgRole } from "@/hooks/useOrgRole";
+import { Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/")({
   component: AgentsList,
@@ -105,6 +106,12 @@ function AgentsList() {
               Voice agents in this organization. Pick one to manage its flows.
             </p>
           </div>
+          <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="icon" title="Organization settings">
+            <Link to="/orgs/$orgId/settings" params={{ orgId }}>
+              <Settings className="h-4 w-4" />
+            </Link>
+          </Button>
           {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -169,6 +176,7 @@ function AgentsList() {
             </DialogContent>
           </Dialog>
           )}
+          </div>
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2">
