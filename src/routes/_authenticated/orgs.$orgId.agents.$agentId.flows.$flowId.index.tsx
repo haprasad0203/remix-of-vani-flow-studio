@@ -34,6 +34,7 @@ import {
 } from "@/lib/flow-types";
 import { StepConfig } from "@/components/flow-editor/StepConfig";
 import { ChevronDown, ChevronUp, Trash2, ArrowUp, ArrowDown, Plus } from "lucide-react";
+import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute(
   "/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/",
@@ -53,6 +54,7 @@ type PublishedVersion = { id: string; version_number: number; json: unknown };
 
 function FlowEditor() {
   const { orgId, agentId, flowId } = Route.useParams();
+  const { role, canEdit, loading: roleLoading } = useOrgRole(orgId);
 
   const [flow, setFlow] = useState<FlowRow | null>(null);
   const [agentName, setAgentName] = useState<string>("");
@@ -267,6 +269,11 @@ function FlowEditor() {
         ]}
       />
       <main className="mx-auto max-w-4xl px-6 py-8">
+        {role === "viewer" && (
+          <div className="mb-4 rounded-md border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+            You have view-only access to this flow.
+          </div>
+        )}
         {/* Header bar */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -302,22 +309,26 @@ function FlowEditor() {
                 Version history
               </Link>
             </Button>
-            <Button variant="outline" onClick={saveDraft} disabled={saving || !dirty}>
-              {saving ? "Saving…" : "Save draft"}
-            </Button>
-            <Button
-              onClick={publish}
-              disabled={publishing || dirty || !draftDifferentFromPublished}
-              title={
-                dirty
-                  ? "Save your draft first"
-                  : !draftDifferentFromPublished
-                    ? "Nothing new to publish"
-                    : ""
-              }
-            >
-              {publishing ? "Publishing…" : "Publish"}
-            </Button>
+            {!roleLoading && canEdit && (
+              <>
+                <Button variant="outline" onClick={saveDraft} disabled={saving || !dirty}>
+                  {saving ? "Saving…" : "Save draft"}
+                </Button>
+                <Button
+                  onClick={publish}
+                  disabled={publishing || dirty || !draftDifferentFromPublished}
+                  title={
+                    dirty
+                      ? "Save your draft first"
+                      : !draftDifferentFromPublished
+                        ? "Nothing new to publish"
+                        : ""
+                  }
+                >
+                  {publishing ? "Publishing…" : "Publish"}
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
@@ -471,6 +482,7 @@ function FlowEditor() {
         </ol>
 
         {/* Add step */}
+        {!roleLoading && canEdit && (
         <div className="mt-6 flex justify-center">
           <Dialog open={picking} onOpenChange={setPicking}>
             <DialogTrigger asChild>
@@ -500,6 +512,7 @@ function FlowEditor() {
             </DialogContent>
           </Dialog>
         </div>
+        )}
       </main>
     </>
   );

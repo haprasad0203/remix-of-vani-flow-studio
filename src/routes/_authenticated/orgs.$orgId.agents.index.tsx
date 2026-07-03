@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
+import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/")({
   component: AgentsList,
@@ -39,6 +40,7 @@ type Org = { id: string; name: string };
 
 function AgentsList() {
   const { orgId } = Route.useParams();
+  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
   const [org, setOrg] = useState<Org | null>(null);
   const [agents, setAgents] = useState<Agent[] | null>(null);
   const [open, setOpen] = useState(false);
@@ -103,6 +105,7 @@ function AgentsList() {
               Voice agents in this organization. Pick one to manage its flows.
             </p>
           </div>
+          {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>New agent</Button>
@@ -165,6 +168,7 @@ function AgentsList() {
               </form>
             </DialogContent>
           </Dialog>
+          )}
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2">

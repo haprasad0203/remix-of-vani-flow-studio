@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
+import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
@@ -31,6 +32,7 @@ type Flow = {
 
 function FlowsList() {
   const { orgId, agentId } = Route.useParams();
+  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
   const [agent, setAgent] = useState<Agent | null>(null);
   const [flows, setFlows] = useState<Flow[] | null>(null);
   const [open, setOpen] = useState(false);
@@ -102,6 +104,7 @@ function FlowsList() {
               Conversation flows for this agent.
             </p>
           </div>
+          {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>New flow</Button>
@@ -129,6 +132,7 @@ function FlowsList() {
               </form>
             </DialogContent>
           </Dialog>
+          )}
         </div>
 
         <div className="mt-8 space-y-3">
