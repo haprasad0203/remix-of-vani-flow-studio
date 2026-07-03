@@ -104,6 +104,7 @@ function FlowsList() {
               Conversation flows for this agent.
             </p>
           </div>
+          {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>New flow</Button>
@@ -131,6 +132,7 @@ function FlowsList() {
               </form>
             </DialogContent>
           </Dialog>
+          )}
         </div>
 
         <div className="mt-8 space-y-3">
