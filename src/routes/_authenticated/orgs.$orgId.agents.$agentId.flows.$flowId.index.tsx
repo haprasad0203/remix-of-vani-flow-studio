@@ -269,6 +269,11 @@ function FlowEditor() {
         ]}
       />
       <main className="mx-auto max-w-4xl px-6 py-8">
+        {role === "viewer" && (
+          <div className="mb-4 rounded-md border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+            You have view-only access to this flow.
+          </div>
+        )}
         {/* Header bar */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
