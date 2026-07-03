@@ -40,6 +40,7 @@ type Org = { id: string; name: string };
 
 function AgentsList() {
   const { orgId } = Route.useParams();
+  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
   const [org, setOrg] = useState<Org | null>(null);
   const [agents, setAgents] = useState<Agent[] | null>(null);
   const [open, setOpen] = useState(false);
