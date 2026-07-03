@@ -34,6 +34,7 @@ import {
 } from "@/lib/flow-types";
 import { StepConfig } from "@/components/flow-editor/StepConfig";
 import { ChevronDown, ChevronUp, Trash2, ArrowUp, ArrowDown, Plus } from "lucide-react";
+import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute(
   "/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/",
