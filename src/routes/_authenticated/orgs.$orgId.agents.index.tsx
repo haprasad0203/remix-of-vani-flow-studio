@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { useOrgRole } from "@/hooks/useOrgRole";
+import { Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/")({
   component: AgentsList,
