@@ -105,6 +105,12 @@ function AgentsList() {
               Voice agents in this organization. Pick one to manage its flows.
             </p>
           </div>
+          <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="icon" title="Organization settings">
+            <Link to="/orgs/$orgId/settings" params={{ orgId }}>
+              <Settings className="h-4 w-4" />
+            </Link>
+          </Button>
           {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
