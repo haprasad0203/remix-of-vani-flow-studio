@@ -304,22 +304,26 @@ function FlowEditor() {
                 Version history
               </Link>
             </Button>
-            <Button variant="outline" onClick={saveDraft} disabled={saving || !dirty}>
-              {saving ? "Saving…" : "Save draft"}
-            </Button>
-            <Button
-              onClick={publish}
-              disabled={publishing || dirty || !draftDifferentFromPublished}
-              title={
-                dirty
-                  ? "Save your draft first"
-                  : !draftDifferentFromPublished
-                    ? "Nothing new to publish"
-                    : ""
-              }
-            >
-              {publishing ? "Publishing…" : "Publish"}
-            </Button>
+            {!roleLoading && canEdit && (
+              <>
+                <Button variant="outline" onClick={saveDraft} disabled={saving || !dirty}>
+                  {saving ? "Saving…" : "Save draft"}
+                </Button>
+                <Button
+                  onClick={publish}
+                  disabled={publishing || dirty || !draftDifferentFromPublished}
+                  title={
+                    dirty
+                      ? "Save your draft first"
+                      : !draftDifferentFromPublished
+                        ? "Nothing new to publish"
+                        : ""
+                  }
+                >
+                  {publishing ? "Publishing…" : "Publish"}
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
