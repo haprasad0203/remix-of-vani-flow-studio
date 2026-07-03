@@ -482,6 +482,7 @@ function FlowEditor() {
         </ol>
 
         {/* Add step */}
+        {!roleLoading && canEdit && (
         <div className="mt-6 flex justify-center">
           <Dialog open={picking} onOpenChange={setPicking}>
             <DialogTrigger asChild>
@@ -511,6 +512,7 @@ function FlowEditor() {
             </DialogContent>
           </Dialog>
         </div>
+        )}
       </main>
     </>
   );
