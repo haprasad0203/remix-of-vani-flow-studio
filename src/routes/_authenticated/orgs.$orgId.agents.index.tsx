@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
+import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/")({
   component: AgentsList,
