@@ -105,6 +105,7 @@ function AgentsList() {
               Voice agents in this organization. Pick one to manage its flows.
             </p>
           </div>
+          {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>New agent</Button>
