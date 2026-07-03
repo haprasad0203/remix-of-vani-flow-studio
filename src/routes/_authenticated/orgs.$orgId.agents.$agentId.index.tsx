@@ -32,6 +32,7 @@ type Flow = {
 
 function FlowsList() {
   const { orgId, agentId } = Route.useParams();
+  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
   const [agent, setAgent] = useState<Agent | null>(null);
   const [flows, setFlows] = useState<Flow[] | null>(null);
   const [open, setOpen] = useState(false);
