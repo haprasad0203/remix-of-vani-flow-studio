@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { useOrgRole } from "@/hooks/useOrgRole";
@@ -26,7 +37,21 @@ type Direction = "outbound" | "inbound";
 
 function AgentSettings() {
   const { orgId, agentId } = Route.useParams();
-  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
+  const navigate = useNavigate();
+  const { canEdit, isOwner, loading: roleLoading } = useOrgRole(orgId);
+  const [deleting, setDeleting] = useState(false);
+
+  async function deleteAgent() {
+    setDeleting(true);
+    const { error } = await supabase.from("agents").delete().eq("id", agentId);
+    setDeleting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Agent deleted");
+    navigate({ to: "/orgs/$orgId/agents", params: { orgId } });
+  }
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -168,6 +193,49 @@ function AgentSettings() {
             </div>
           )}
         </Card>
+
+        {!roleLoading && isOwner && (
+          <Card className="mt-6 border-destructive/40 p-6">
+            <h2 className="text-sm font-medium uppercase tracking-wide text-destructive">
+              Danger zone
+            </h2>
+            <div className="mt-4 flex items-center justify-between gap-4">
+              <div>
+                <div className="text-sm font-medium">Delete agent</div>
+                <div className="text-xs text-muted-foreground">
+                  Permanently deletes this agent and all its flows. This cannot be undone.
+                </div>
+              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete “{original.name}”?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This permanently deletes the agent and every flow inside it. This
+                      action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={(e) => {
+                        e.preventDefault();
+                        deleteAgent();
+                      }}
+                      disabled={deleting}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {deleting ? "Deleting…" : "Delete agent"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </Card>
+        )}
       </main>
     </>
   );
