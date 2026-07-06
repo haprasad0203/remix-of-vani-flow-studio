@@ -37,7 +37,21 @@ type Direction = "outbound" | "inbound";
 
 function AgentSettings() {
   const { orgId, agentId } = Route.useParams();
-  const { canEdit, loading: roleLoading } = useOrgRole(orgId);
+  const navigate = useNavigate();
+  const { canEdit, isOwner, loading: roleLoading } = useOrgRole(orgId);
+  const [deleting, setDeleting] = useState(false);
+
+  async function deleteAgent() {
+    setDeleting(true);
+    const { error } = await supabase.from("agents").delete().eq("id", agentId);
+    setDeleting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Agent deleted");
+    navigate({ to: "/orgs/$orgId/agents", params: { orgId } });
+  }
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
