@@ -23,19 +23,31 @@ export const Route = createFileRoute("/_authenticated/orgs/")({
   component: OrgPicker,
 });
 
-type Org = { id: string; name: string; created_at: string };
+type OrgMembership = {
+  role: "owner" | "editor" | "viewer";
+  org_id: string;
+  organizations: { id: string; name: string; created_at: string } | null;
+};
 
 function OrgPicker() {
-  const [orgs, setOrgs] = useState<Org[] | null>(null);
+  const [orgs, setOrgs] = useState<OrgMembership[] | null>(null);
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [creating, setCreating] = useState(false);
 
   async function load() {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData.user) {
+      toast.error(userError?.message ?? "Not signed in");
+      setOrgs([]);
+      return;
+    }
+
     const { data, error } = await supabase
-      .from("organizations")
-      .select("id, name, created_at")
-      .order("created_at", { ascending: true });
+      .from("org_members")
+      .select("role, org_id, organizations(id, name, created_at)")
+      .eq("user_id", userData.user.id)
+      .order("created_at", { referencedTable: "organizations", ascending: true });
     if (error) {
       toast.error(error.message);
       setOrgs([]);
@@ -43,6 +55,7 @@ function OrgPicker() {
     }
     setOrgs(data ?? []);
   }
+
 
   useEffect(() => {
     load();
