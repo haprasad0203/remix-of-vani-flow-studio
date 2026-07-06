@@ -23,6 +23,7 @@ import { Route as ApiPublicExotelVoiceAudioIdRouteImport } from './routes/api/pu
 import { Route as ApiPublicExotelAudioAudioIdRouteImport } from './routes/api/public/exotel/audio.$audioId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.index'
+import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.settings'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId.versions'
@@ -103,6 +104,12 @@ const AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedOrgsOrgIdAgentsAgentIdRoute,
   } as any)
+const AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute =
+  AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsAgentIdRoute,
+  } as any)
 const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute =
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport.update({
     id: '/flows/$flowId',
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
   '/orgs/$orgId/agents/': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
+  '/orgs/$orgId/agents/$agentId/settings': typeof AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute
   '/orgs/$orgId/agents/$agentId/': typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   '/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteWithChildren
   '/orgs/$orgId/agents/$agentId/flows/$flowId/versions': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
@@ -150,6 +158,7 @@ export interface FileRoutesByTo {
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
+  '/orgs/$orgId/agents/$agentId/settings': typeof AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute
   '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   '/orgs/$orgId/agents/$agentId/flows/$flowId/versions': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
   '/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute
@@ -169,6 +178,7 @@ export interface FileRoutesById {
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
   '/_authenticated/orgs/$orgId/agents/': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
+  '/_authenticated/orgs/$orgId/agents/$agentId/settings': typeof AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute
   '/_authenticated/orgs/$orgId/agents/$agentId/': typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteWithChildren
   '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions': typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
     | '/orgs/$orgId/agents/'
+    | '/orgs/$orgId/agents/$agentId/settings'
     | '/orgs/$orgId/agents/$agentId/'
     | '/orgs/$orgId/agents/$agentId/flows/$flowId'
     | '/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
     | '/orgs/$orgId/agents'
+    | '/orgs/$orgId/agents/$agentId/settings'
     | '/orgs/$orgId/agents/$agentId'
     | '/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
     | '/orgs/$orgId/agents/$agentId/flows/$flowId'
@@ -222,6 +234,7 @@ export interface FileRouteTypes {
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
     | '/_authenticated/orgs/$orgId/agents/'
+    | '/_authenticated/orgs/$orgId/agents/$agentId/settings'
     | '/_authenticated/orgs/$orgId/agents/$agentId/'
     | '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId'
     | '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId/versions'
@@ -336,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
     }
+    '/_authenticated/orgs/$orgId/agents/$agentId/settings': {
+      id: '/_authenticated/orgs/$orgId/agents/$agentId/settings'
+      path: '/settings'
+      fullPath: '/orgs/$orgId/agents/$agentId/settings'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRoute
+    }
     '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId': {
       id: '/_authenticated/orgs/$orgId/agents/$agentId/flows/$flowId'
       path: '/flows/$flowId'
@@ -379,12 +399,15 @@ const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteWithChildren =
   )
 
 interface AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren {
+  AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteWithChildren
 }
 
 const AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren: AuthenticatedOrgsOrgIdAgentsAgentIdRouteChildren =
   {
+    AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute:
+      AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRoute,
     AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute:
       AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute,
     AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRoute:
@@ -463,13 +486,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
