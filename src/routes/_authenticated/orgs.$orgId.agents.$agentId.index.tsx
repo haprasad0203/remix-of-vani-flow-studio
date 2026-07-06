@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
 import { useOrgRole } from "@/hooks/useOrgRole";
+import { Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
@@ -104,6 +105,15 @@ function FlowsList() {
               Conversation flows for this agent.
             </p>
           </div>
+          <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="icon" title="Agent settings">
+            <Link
+              to="/orgs/$orgId/agents/$agentId/settings"
+              params={{ orgId, agentId }}
+            >
+              <Settings className="h-4 w-4" />
+            </Link>
+          </Button>
           {!roleLoading && canEdit && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
