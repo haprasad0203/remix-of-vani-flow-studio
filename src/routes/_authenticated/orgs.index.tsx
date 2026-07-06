@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,19 +23,31 @@ export const Route = createFileRoute("/_authenticated/orgs/")({
   component: OrgPicker,
 });
 
-type Org = { id: string; name: string; created_at: string };
+type OrgMembership = {
+  role: "owner" | "editor" | "viewer";
+  org_id: string;
+  organizations: { id: string; name: string; created_at: string } | null;
+};
 
 function OrgPicker() {
-  const [orgs, setOrgs] = useState<Org[] | null>(null);
+  const [orgs, setOrgs] = useState<OrgMembership[] | null>(null);
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [creating, setCreating] = useState(false);
 
   async function load() {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData.user) {
+      toast.error(userError?.message ?? "Not signed in");
+      setOrgs([]);
+      return;
+    }
+
     const { data, error } = await supabase
-      .from("organizations")
-      .select("id, name, created_at")
-      .order("created_at", { ascending: true });
+      .from("org_members")
+      .select("role, org_id, organizations(id, name, created_at)")
+      .eq("user_id", userData.user.id)
+      .order("created_at", { referencedTable: "organizations", ascending: true });
     if (error) {
       toast.error(error.message);
       setOrgs([]);
@@ -41,6 +55,7 @@ function OrgPicker() {
     }
     setOrgs(data ?? []);
   }
+
 
   useEffect(() => {
     load();
@@ -116,21 +131,29 @@ function OrgPicker() {
               </p>
             </Card>
           )}
-          {orgs?.map((o) => (
-            <Link
-              key={o.id}
-              to="/orgs/$orgId/agents"
-              params={{ orgId: o.id }}
-              className="block"
-            >
-              <Card className="p-5 transition hover:border-foreground/30">
-                <div className="font-medium">{o.name}</div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  Created {new Date(o.created_at).toLocaleDateString()}
-                </div>
-              </Card>
-            </Link>
-          ))}
+          {orgs?.map((o) => {
+            const badgeVariant =
+              o.role === "owner" ? "default" : o.role === "editor" ? "secondary" : "outline";
+            return (
+              <Link
+                key={o.org_id}
+                to="/orgs/$orgId/agents"
+                params={{ orgId: o.org_id }}
+                className="block"
+              >
+                <Card className="p-5 transition hover:border-foreground/30">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="font-medium">{o.organizations?.name}</div>
+                    <Badge variant={badgeVariant}>{o.role.charAt(0).toUpperCase() + o.role.slice(1)}</Badge>
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    Created {new Date(o.organizations?.created_at ?? "").toLocaleDateString()}
+                  </div>
+                </Card>
+              </Link>
+            );
+          })}
+
         </div>
       </main>
     </>
