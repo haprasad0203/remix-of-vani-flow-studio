@@ -131,21 +131,29 @@ function OrgPicker() {
               </p>
             </Card>
           )}
-          {orgs?.map((o) => (
-            <Link
-              key={o.id}
-              to="/orgs/$orgId/agents"
-              params={{ orgId: o.id }}
-              className="block"
-            >
-              <Card className="p-5 transition hover:border-foreground/30">
-                <div className="font-medium">{o.name}</div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  Created {new Date(o.created_at).toLocaleDateString()}
-                </div>
-              </Card>
-            </Link>
-          ))}
+          {orgs?.map((o) => {
+            const badgeVariant =
+              o.role === "owner" ? "default" : o.role === "editor" ? "secondary" : "outline";
+            return (
+              <Link
+                key={o.org_id}
+                to="/orgs/$orgId/agents"
+                params={{ orgId: o.org_id }}
+                className="block"
+              >
+                <Card className="p-5 transition hover:border-foreground/30">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="font-medium">{o.organizations?.name}</div>
+                    <Badge variant={badgeVariant}>{o.role.charAt(0).toUpperCase() + o.role.slice(1)}</Badge>
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    Created {new Date(o.organizations?.created_at ?? "").toLocaleDateString()}
+                  </div>
+                </Card>
+              </Link>
+            );
+          })}
+
         </div>
       </main>
     </>
