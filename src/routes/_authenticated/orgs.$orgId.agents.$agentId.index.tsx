@@ -13,11 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
 import { useOrgRole } from "@/hooks/useOrgRole";
-import { Settings } from "lucide-react";
+import { Settings, MoreVertical } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
@@ -29,6 +35,7 @@ type Flow = {
   name: string;
   updated_at: string;
   published_version_id: string | null;
+  draft_json: unknown;
 };
 
 function FlowsList() {
@@ -49,7 +56,7 @@ function FlowsList() {
         .maybeSingle(),
       supabase
         .from("flows")
-        .select("id, name, updated_at, published_version_id")
+        .select("id, name, updated_at, published_version_id, draft_json")
         .eq("agent_id", agentId)
         .order("updated_at", { ascending: false }),
     ]);
