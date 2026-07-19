@@ -35,6 +35,7 @@ type Flow = {
   name: string;
   updated_at: string;
   published_version_id: string | null;
+  draft_json: unknown;
 };
 
 function FlowsList() {
