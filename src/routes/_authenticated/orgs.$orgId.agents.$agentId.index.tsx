@@ -56,7 +56,7 @@ function FlowsList() {
         .maybeSingle(),
       supabase
         .from("flows")
-        .select("id, name, updated_at, published_version_id")
+        .select("id, name, updated_at, published_version_id, draft_json")
         .eq("agent_id", agentId)
         .order("updated_at", { ascending: false }),
     ]);
