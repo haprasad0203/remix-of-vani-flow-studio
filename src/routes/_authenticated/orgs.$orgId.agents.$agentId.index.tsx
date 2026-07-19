@@ -95,6 +95,20 @@ function FlowsList() {
     window.location.assign(`/orgs/${orgId}/agents/${agentId}/flows/${data.id}`);
   }
 
+  async function duplicateFlow(flow: Flow) {
+    const { error } = await supabase.from("flows").insert({
+      agent_id: agentId,
+      name: flow.name + " (copy)",
+      draft_json: flow.draft_json as never,
+    });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Flow duplicated");
+    load();
+  }
+
   return (
     <>
       <AppHeader
@@ -173,15 +187,33 @@ function FlowsList() {
                     Updated {new Date(f.updated_at).toLocaleString()}
                   </div>
                 </div>
-                <div className="text-xs">
-                  {f.published_version_id ? (
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-                      Published
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
-                      Draft only
-                    </span>
+                <div className="flex items-center gap-3">
+                  <div className="text-xs">
+                    {f.published_version_id ? (
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                        Published
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
+                        Draft only
+                      </span>
+                    )}
+                  </div>
+                  {!roleLoading && canEdit && (
+                    <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onSelect={() => duplicateFlow(f)}>
+                            Duplicate
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   )}
                 </div>
               </Card>
