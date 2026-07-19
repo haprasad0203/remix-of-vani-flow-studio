@@ -95,6 +95,20 @@ function FlowsList() {
     window.location.assign(`/orgs/${orgId}/agents/${agentId}/flows/${data.id}`);
   }
 
+  async function duplicateFlow(flow: Flow) {
+    const { error } = await supabase.from("flows").insert({
+      agent_id: agentId,
+      name: flow.name + " (copy)",
+      draft_json: flow.draft_json as never,
+    });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Flow duplicated");
+    load();
+  }
+
   return (
     <>
       <AppHeader
