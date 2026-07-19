@@ -13,11 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
 import { useOrgRole } from "@/hooks/useOrgRole";
-import { Settings } from "lucide-react";
+import { Settings, MoreVertical } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
