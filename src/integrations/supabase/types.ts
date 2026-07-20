@@ -159,6 +159,61 @@ export type Database = {
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "org_members_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      org_invites: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          invited_by: string
+          org_id: string
+          role: Database["public"]["Enums"]["org_role"]
+          status: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          invited_by: string
+          org_id: string
+          role: Database["public"]["Enums"]["org_role"]
+          status?: string
+          token?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string
+          org_id?: string
+          role?: Database["public"]["Enums"]["org_role"]
+          status?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_invites_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_invites_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
         ]
       }
       organizations: {
@@ -182,20 +237,26 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           name: string | null
+          theme: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id: string
           name?: string | null
+          theme?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           name?: string | null
+          theme?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -206,6 +267,10 @@ export type Database = {
     }
     Functions: {
       agent_org: { Args: { _agent_id: string }; Returns: string }
+      accept_org_invite: {
+        Args: { invite_token: string }
+        Returns: Json
+      }
       can_edit_org: {
         Args: { _org_id: string; _user_id: string }
         Returns: boolean

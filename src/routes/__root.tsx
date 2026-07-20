@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { ThemeProvider } from "@/lib/theme";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -79,9 +80,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VANI — Voice-AI Control Plane" },
+      { title: "Kzuno — Voice-AI Control Plane" },
       { name: "description", content: "Build and publish voice-agent conversation flows for D2C brands." },
-      { property: "og:title", content: "VANI" },
+      { property: "og:title", content: "Kzuno" },
       { property: "og:description", content: "Voice-AI control plane for D2C brands in India." },
       { property: "og:type", content: "website" },
     ],
@@ -103,6 +104,19 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function () {
+            try {
+              var stored = localStorage.getItem('kzuno-theme');
+              var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              var dark = stored === 'dark' || ((stored === 'system' || !stored) && systemDark);
+              document.documentElement.classList.toggle('dark', dark);
+            } catch (e) {}
+          })();
+        ` }} />
       </head>
       <body>
         {children}
@@ -126,10 +140,12 @@ function RootComponent() {
   }, [router, queryClient]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Toaster richColors position="top-right" />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

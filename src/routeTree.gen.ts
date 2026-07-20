@@ -9,70 +9,96 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as AuthenticatedOrgsIndexRouteImport } from './routes/_authenticated/orgs.index'
-import { Route as AuthenticatedOrgsOrgIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.settings'
+import { Route as AuthenticatedOrgsOrgIdRouteImport } from './routes/_authenticated/orgs.$orgId'
+import { Route as AuthenticatedOrgsOrgIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
+import { Route as AuthenticatedOrgsOrgIdMembersRouteImport } from './routes/_authenticated/orgs.$orgId.members'
+import { Route as AuthenticatedOrgsOrgIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.settings'
 import { Route as AuthenticatedOrgsOrgIdAgentsIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.index'
-import { Route as ApiPublicExotelVoiceAudioIdRouteImport } from './routes/api/public/exotel/voice.$audioId'
-import { Route as ApiPublicExotelAudioAudioIdRouteImport } from './routes/api/public/exotel/audio.$audioId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId'
+import { Route as ApiPublicExotelAudioAudioIdRouteImport } from './routes/api/public/exotel/audio.$audioId'
+import { Route as ApiPublicExotelVoiceAudioIdRouteImport } from './routes/api/public/exotel/voice.$audioId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.settings'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId.flows.$flowId.versions'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOrgsRoute = AuthenticatedOrgsRouteImport.update({
   id: '/orgs',
   path: '/orgs',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedOrgsIndexRoute = AuthenticatedOrgsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedOrgsRoute,
 } as any)
-const AuthenticatedOrgsOrgIdSettingsRoute =
-  AuthenticatedOrgsOrgIdSettingsRouteImport.update({
-    id: '/$orgId/settings',
-    path: '/$orgId/settings',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+const AuthenticatedOrgsOrgIdRoute = AuthenticatedOrgsOrgIdRouteImport.update({
+  id: '/$orgId',
+  path: '/$orgId',
+  getParentRoute: () => AuthenticatedOrgsRoute,
+} as any)
+const AuthenticatedOrgsOrgIdIndexRoute =
+  AuthenticatedOrgsOrgIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsRoute =
   AuthenticatedOrgsOrgIdAgentsRouteImport.update({
-    id: '/$orgId/agents',
-    path: '/$orgId/agents',
-    getParentRoute: () => AuthenticatedOrgsRoute,
+    id: '/agents',
+    path: '/agents',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdMembersRoute =
+  AuthenticatedOrgsOrgIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdSettingsRoute =
+  AuthenticatedOrgsOrgIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsIndexRoute =
   AuthenticatedOrgsOrgIdAgentsIndexRouteImport.update({
@@ -80,11 +106,11 @@ const AuthenticatedOrgsOrgIdAgentsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
-const ApiPublicExotelVoiceAudioIdRoute =
-  ApiPublicExotelVoiceAudioIdRouteImport.update({
-    id: '/api/public/exotel/voice/$audioId',
-    path: '/api/public/exotel/voice/$audioId',
-    getParentRoute: () => rootRouteImport,
+const AuthenticatedOrgsOrgIdAgentsAgentIdRoute =
+  AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport.update({
+    id: '/$agentId',
+    path: '/$agentId',
+    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
   } as any)
 const ApiPublicExotelAudioAudioIdRoute =
   ApiPublicExotelAudioAudioIdRouteImport.update({
@@ -92,11 +118,11 @@ const ApiPublicExotelAudioAudioIdRoute =
     path: '/api/public/exotel/audio/$audioId',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedOrgsOrgIdAgentsAgentIdRoute =
-  AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport.update({
-    id: '/$agentId',
-    path: '/$agentId',
-    getParentRoute: () => AuthenticatedOrgsOrgIdAgentsRoute,
+const ApiPublicExotelVoiceAudioIdRoute =
+  ApiPublicExotelVoiceAudioIdRouteImport.update({
+    id: '/api/public/exotel/voice/$audioId',
+    path: '/api/public/exotel/voice/$audioId',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsAgentIdIndexRoute =
   AuthenticatedOrgsOrgIdAgentsAgentIdIndexRouteImport.update({
@@ -135,9 +161,13 @@ export interface FileRoutesByFullPath {
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
   '/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
@@ -153,8 +183,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/orgs': typeof AuthenticatedOrgsIndexRoute
+  '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsIndexRoute
@@ -171,9 +204,13 @@ export interface FileRoutesById {
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/invite/$token': typeof InviteTokenRoute
+  '/_authenticated/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
   '/_authenticated/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/_authenticated/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/_authenticated/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/_authenticated/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
@@ -192,9 +229,13 @@ export interface FileRouteTypes {
     | '/orgs'
     | '/profile'
     | '/auth/reset-password'
+    | '/invite/$token'
+    | '/orgs/$orgId'
     | '/orgs/'
     | '/orgs/$orgId/agents'
+    | '/orgs/$orgId/members'
     | '/orgs/$orgId/settings'
+    | '/orgs/$orgId/'
     | '/orgs/$orgId/agents/$agentId'
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
@@ -210,8 +251,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/profile'
     | '/auth/reset-password'
+    | '/invite/$token'
     | '/orgs'
+    | '/orgs/$orgId/members'
     | '/orgs/$orgId/settings'
+    | '/orgs/$orgId'
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
     | '/orgs/$orgId/agents'
@@ -227,9 +271,13 @@ export interface FileRouteTypes {
     | '/_authenticated/orgs'
     | '/_authenticated/profile'
     | '/auth/reset-password'
+    | '/invite/$token'
+    | '/_authenticated/orgs/$orgId'
     | '/_authenticated/orgs/'
     | '/_authenticated/orgs/$orgId/agents'
+    | '/_authenticated/orgs/$orgId/members'
     | '/_authenticated/orgs/$orgId/settings'
+    | '/_authenticated/orgs/$orgId/'
     | '/_authenticated/orgs/$orgId/agents/$agentId'
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
@@ -245,17 +293,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  InviteTokenRoute: typeof InviteTokenRoute
   ApiPublicExotelAudioAudioIdRoute: typeof ApiPublicExotelAudioAudioIdRoute
   ApiPublicExotelVoiceAudioIdRoute: typeof ApiPublicExotelVoiceAudioIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -265,26 +314,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/orgs': {
       id: '/_authenticated/orgs'
@@ -293,6 +328,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/orgs/': {
       id: '/_authenticated/orgs/'
       path: '/'
@@ -300,19 +356,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsIndexRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
     }
-    '/_authenticated/orgs/$orgId/settings': {
-      id: '/_authenticated/orgs/$orgId/settings'
-      path: '/$orgId/settings'
-      fullPath: '/orgs/$orgId/settings'
-      preLoaderRoute: typeof AuthenticatedOrgsOrgIdSettingsRouteImport
+    '/_authenticated/orgs/$orgId': {
+      id: '/_authenticated/orgs/$orgId'
+      path: '/$orgId'
+      fullPath: '/orgs/$orgId'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
+    }
+    '/_authenticated/orgs/$orgId/': {
+      id: '/_authenticated/orgs/$orgId/'
+      path: '/'
+      fullPath: '/orgs/$orgId/'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdIndexRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
     }
     '/_authenticated/orgs/$orgId/agents': {
       id: '/_authenticated/orgs/$orgId/agents'
-      path: '/$orgId/agents'
+      path: '/agents'
       fullPath: '/orgs/$orgId/agents'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteImport
-      parentRoute: typeof AuthenticatedOrgsRoute
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/members': {
+      id: '/_authenticated/orgs/$orgId/members'
+      path: '/members'
+      fullPath: '/orgs/$orgId/members'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdMembersRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/settings': {
+      id: '/_authenticated/orgs/$orgId/settings'
+      path: '/settings'
+      fullPath: '/orgs/$orgId/settings'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
     }
     '/_authenticated/orgs/$orgId/agents/': {
       id: '/_authenticated/orgs/$orgId/agents/'
@@ -321,12 +398,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsIndexRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
-    '/api/public/exotel/voice/$audioId': {
-      id: '/api/public/exotel/voice/$audioId'
-      path: '/api/public/exotel/voice/$audioId'
-      fullPath: '/api/public/exotel/voice/$audioId'
-      preLoaderRoute: typeof ApiPublicExotelVoiceAudioIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/orgs/$orgId/agents/$agentId': {
+      id: '/_authenticated/orgs/$orgId/agents/$agentId'
+      path: '/$agentId'
+      fullPath: '/orgs/$orgId/agents/$agentId'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
     }
     '/api/public/exotel/audio/$audioId': {
       id: '/api/public/exotel/audio/$audioId'
@@ -335,12 +412,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicExotelAudioAudioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/orgs/$orgId/agents/$agentId': {
-      id: '/_authenticated/orgs/$orgId/agents/$agentId'
-      path: '/$agentId'
-      fullPath: '/orgs/$orgId/agents/$agentId'
-      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport
-      parentRoute: typeof AuthenticatedOrgsOrgIdAgentsRoute
+    '/api/public/exotel/voice/$audioId': {
+      id: '/api/public/exotel/voice/$audioId'
+      path: '/api/public/exotel/voice/$audioId'
+      fullPath: '/api/public/exotel/voice/$audioId'
+      preLoaderRoute: typeof ApiPublicExotelVoiceAudioIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/orgs/$orgId/agents/$agentId/': {
       id: '/_authenticated/orgs/$orgId/agents/$agentId/'
@@ -437,17 +514,35 @@ const AuthenticatedOrgsOrgIdAgentsRouteWithChildren =
     AuthenticatedOrgsOrgIdAgentsRouteChildren,
   )
 
-interface AuthenticatedOrgsRouteChildren {
-  AuthenticatedOrgsIndexRoute: typeof AuthenticatedOrgsIndexRoute
+interface AuthenticatedOrgsOrgIdRouteChildren {
   AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  AuthenticatedOrgsOrgIdMembersRoute: typeof AuthenticatedOrgsOrgIdMembersRoute
   AuthenticatedOrgsOrgIdSettingsRoute: typeof AuthenticatedOrgsOrgIdSettingsRoute
+  AuthenticatedOrgsOrgIdIndexRoute: typeof AuthenticatedOrgsOrgIdIndexRoute
+}
+
+const AuthenticatedOrgsOrgIdRouteChildren: AuthenticatedOrgsOrgIdRouteChildren =
+  {
+    AuthenticatedOrgsOrgIdAgentsRoute:
+      AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
+    AuthenticatedOrgsOrgIdMembersRoute: AuthenticatedOrgsOrgIdMembersRoute,
+    AuthenticatedOrgsOrgIdSettingsRoute: AuthenticatedOrgsOrgIdSettingsRoute,
+    AuthenticatedOrgsOrgIdIndexRoute: AuthenticatedOrgsOrgIdIndexRoute,
+  }
+
+const AuthenticatedOrgsOrgIdRouteWithChildren =
+  AuthenticatedOrgsOrgIdRoute._addFileChildren(
+    AuthenticatedOrgsOrgIdRouteChildren,
+  )
+
+interface AuthenticatedOrgsRouteChildren {
+  AuthenticatedOrgsOrgIdRoute: typeof AuthenticatedOrgsOrgIdRouteWithChildren
+  AuthenticatedOrgsIndexRoute: typeof AuthenticatedOrgsIndexRoute
 }
 
 const AuthenticatedOrgsRouteChildren: AuthenticatedOrgsRouteChildren = {
+  AuthenticatedOrgsOrgIdRoute: AuthenticatedOrgsOrgIdRouteWithChildren,
   AuthenticatedOrgsIndexRoute: AuthenticatedOrgsIndexRoute,
-  AuthenticatedOrgsOrgIdAgentsRoute:
-    AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
-  AuthenticatedOrgsOrgIdSettingsRoute: AuthenticatedOrgsOrgIdSettingsRoute,
 }
 
 const AuthenticatedOrgsRouteWithChildren =
@@ -480,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  InviteTokenRoute: InviteTokenRoute,
   ApiPublicExotelAudioAudioIdRoute: ApiPublicExotelAudioAudioIdRoute,
   ApiPublicExotelVoiceAudioIdRoute: ApiPublicExotelVoiceAudioIdRoute,
 }

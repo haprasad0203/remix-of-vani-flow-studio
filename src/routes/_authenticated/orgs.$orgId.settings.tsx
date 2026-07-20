@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -106,13 +106,6 @@ function OrgSettings() {
 
   return (
     <>
-      <AppHeader
-        breadcrumbs={[
-          { label: "Organizations", to: "/orgs" },
-          { label: originalName || "…" },
-          { label: "Settings" },
-        ]}
-      />
       <main className="mx-auto max-w-2xl px-6 py-10">
         <h1 className="text-2xl font-semibold tracking-tight">Organization settings</h1>
 
@@ -141,6 +134,24 @@ function OrgSettings() {
             ) : (
               <div className="text-sm">{originalName}</div>
             )}
+          </div>
+        </Card>
+
+        <Card className="mt-6 p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                Members
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                People with access to this organization.
+              </p>
+            </div>
+            <Button asChild variant="outline">
+              <Link to="/orgs/$orgId/members" params={{ orgId }}>
+                Manage Members
+              </Link>
+            </Button>
           </div>
         </Card>
 

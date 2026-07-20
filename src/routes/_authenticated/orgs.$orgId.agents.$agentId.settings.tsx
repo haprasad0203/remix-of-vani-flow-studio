@@ -111,18 +111,6 @@ function AgentSettings() {
 
   return (
     <>
-      <AppHeader
-        breadcrumbs={[
-          { label: "Organizations", to: "/orgs" },
-          { label: "Agents", to: "/orgs/$orgId/agents", params: { orgId } },
-          {
-            label: original.name || "…",
-            to: "/orgs/$orgId/agents/$agentId",
-            params: { orgId, agentId },
-          },
-          { label: "Settings" },
-        ]}
-      />
       <main className="mx-auto max-w-2xl px-6 py-10">
         <h1 className="text-2xl font-semibold tracking-tight">Agent settings</h1>
 

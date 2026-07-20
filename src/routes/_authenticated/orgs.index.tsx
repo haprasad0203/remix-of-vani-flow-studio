@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/AppHeader";
-import { VoiceTester } from "@/components/VoiceTester";
+import { Building2, Calendar, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/orgs/")({
   component: OrgPicker,
@@ -80,12 +80,11 @@ function OrgPicker() {
 
   return (
     <>
-      <AppHeader />
       <main className="mx-auto max-w-3xl px-6 py-12">
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Your organizations</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h1 className="text-2xl font-bold font-display tracking-tight text-foreground">Your organizations</h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">
               Pick an organization to manage its agents and flows.
             </p>
           </div>
@@ -95,7 +94,7 @@ function OrgPicker() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create organization</DialogTitle>
+                <DialogTitle className="font-display font-bold">Create organization</DialogTitle>
               </DialogHeader>
               <form onSubmit={createOrg} className="space-y-4">
                 <div className="space-y-2">
@@ -117,43 +116,63 @@ function OrgPicker() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="mt-8">
-          <VoiceTester />
-        </div>
 
-
-        <div className="mt-8 space-y-3">
-          {orgs === null && <div className="text-sm text-muted-foreground">Loading…</div>}
+        <div className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <span className="eyebrow-label">Your Organizations</span>
+          </div>
+          {orgs === null && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[1, 2].map((i) => (
+                <Card key={i} className="p-6 h-28 animate-pulse bg-muted/20" />
+              ))}
+            </div>
+          )}
           {orgs && orgs.length === 0 && (
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center border-dashed">
               <p className="text-sm text-muted-foreground">
                 You don't belong to any organization yet. Create one to get started.
               </p>
             </Card>
           )}
-          {orgs?.map((o) => {
-            const badgeVariant =
-              o.role === "owner" ? "default" : o.role === "editor" ? "secondary" : "outline";
-            return (
-              <Link
-                key={o.org_id}
-                to="/orgs/$orgId/agents"
-                params={{ orgId: o.org_id }}
-                className="block"
-              >
-                <Card className="p-5 transition hover:border-foreground/30">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="font-medium">{o.organizations?.name}</div>
-                    <Badge variant={badgeVariant}>{o.role.charAt(0).toUpperCase() + o.role.slice(1)}</Badge>
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    Created {new Date(o.organizations?.created_at ?? "").toLocaleDateString()}
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
-
+          {orgs && orgs.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {orgs.map((o) => {
+                const badgeVariant =
+                  o.role === "owner" ? "default" : o.role === "editor" ? "secondary" : "outline";
+                return (
+                  <Link
+                    key={o.org_id}
+                    to="/orgs/$orgId/agents"
+                    params={{ orgId: o.org_id }}
+                    className="group"
+                  >
+                    <Card className="p-5 h-full relative overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+                      <div className="flex items-start gap-4">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--banyan-tint)] text-[var(--banyan)] font-bold group-hover:scale-105 transition-transform duration-300 border border-border">
+                          <Building2 className="h-5 w-5 opacity-85" />
+                        </div>
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                              {o.organizations?.name}
+                            </span>
+                            <Badge variant={badgeVariant} className="rounded-md px-1.5 py-0.5 text-[10px] uppercase font-bold shrink-0 tracking-wide">
+                              {o.role}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+                            <Calendar className="h-3.5 w-3.5 opacity-60" />
+                            <span>Created {new Date(o.organizations?.created_at ?? "").toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </main>
     </>

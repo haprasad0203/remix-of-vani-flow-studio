@@ -24,6 +24,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { emptyDraft } from "@/lib/flow-types";
 import { useOrgRole } from "@/hooks/useOrgRole";
 import { Settings, MoreVertical } from "lucide-react";
+import { VoiceTester } from "@/components/VoiceTester";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/agents/$agentId/")({
   component: FlowsList,
@@ -46,6 +47,7 @@ function FlowsList() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [creating, setCreating] = useState(false);
+  const [deleteFlowId, setDeleteFlowId] = useState<string | null>(null);
 
   async function load() {
     const [a, f] = await Promise.all([
@@ -109,15 +111,13 @@ function FlowsList() {
     load();
   }
 
+  async function deleteFlow(flowId: string) {
+    setDeleteFlowId(flowId);
+  }
+
+
   return (
     <>
-      <AppHeader
-        breadcrumbs={[
-          { label: "Organizations", to: "/orgs" },
-          { label: "Agents", to: "/orgs/$orgId/agents", params: { orgId } },
-          { label: agent?.name ?? "…" },
-        ]}
-      />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="flex items-end justify-between">
           <div>
@@ -211,6 +211,12 @@ function FlowsList() {
                           <DropdownMenuItem onSelect={() => duplicateFlow(f)}>
                             Duplicate
                           </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onSelect={() => deleteFlow(f.id)}
+                            className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                          >
+                            Delete
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -220,7 +226,41 @@ function FlowsList() {
             </Link>
           ))}
         </div>
+
+        <div className="mt-10">
+          <VoiceTester />
+        </div>
       </main>
+
+      <Dialog open={!!deleteFlowId} onOpenChange={(open) => !open && setDeleteFlowId(null)}>
+        <DialogContent className="max-w-md rounded-xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold font-display text-destructive">Delete Flow</DialogTitle>
+          </DialogHeader>
+          <div className="py-2 text-sm text-muted-foreground">
+            Are you sure you want to delete this flow? This action is permanent and cannot be undone.
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setDeleteFlowId(null)}>Cancel</Button>
+            <Button 
+              variant="destructive" 
+              onClick={async () => {
+                if (!deleteFlowId) return;
+                const { error } = await supabase.from("flows").delete().eq("id", deleteFlowId);
+                setDeleteFlowId(null);
+                if (error) {
+                  toast.error(error.message);
+                  return;
+                }
+                toast.success("Flow deleted");
+                load();
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

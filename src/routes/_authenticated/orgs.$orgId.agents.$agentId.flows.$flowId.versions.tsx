@@ -105,23 +105,6 @@ function VersionHistory() {
 
   return (
     <>
-      <AppHeader
-        breadcrumbs={[
-          { label: "Organizations", to: "/orgs" },
-          { label: "Agents", to: "/orgs/$orgId/agents", params: { orgId } },
-          {
-            label: agentName || "Agent",
-            to: "/orgs/$orgId/agents/$agentId",
-            params: { orgId, agentId },
-          },
-          {
-            label: flowName || "Flow",
-            to: "/orgs/$orgId/agents/$agentId/flows/$flowId",
-            params: { orgId, agentId, flowId },
-          },
-          { label: "Versions" },
-        ]}
-      />
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="flex items-end justify-between">
           <div>
