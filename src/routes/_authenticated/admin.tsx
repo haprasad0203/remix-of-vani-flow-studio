@@ -44,6 +44,13 @@ function AdminLayout() {
         >
           Users
         </Link>
+        <Link
+          to="/admin/activity"
+          className="text-sm font-medium pb-3 border-b-2 border-transparent [&.active]:border-primary [&.active]:text-foreground text-muted-foreground hover:text-foreground transition-all duration-200"
+          activeProps={{ className: "active" }}
+        >
+          Activity Log
+        </Link>
       </div>
 
       {/* Active Panel Area */}

@@ -19,14 +19,22 @@ import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/o
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as InviteTokenRouteImport } from './routes/invite.$token'
+import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminOrgsRouteImport } from './routes/_authenticated/admin.orgs'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedOrgsIndexRouteImport } from './routes/_authenticated/orgs.index'
 import { Route as AuthenticatedOrgsOrgIdRouteImport } from './routes/_authenticated/orgs.$orgId'
+import { Route as ApiKnowledgeEmbedRouteImport } from './routes/api/knowledge/embed'
+import { Route as ApiKnowledgeUploadDocumentRouteImport } from './routes/api/knowledge/upload-document'
+import { Route as ApiMessagingSendTestMessageRouteImport } from './routes/api/messaging/send-test-message'
 import { Route as ApiTelephonyTestConnectionRouteImport } from './routes/api/telephony/test-connection'
 import { Route as AuthenticatedOrgsOrgIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
+import { Route as AuthenticatedOrgsOrgIdAnalyticsRouteImport } from './routes/_authenticated/orgs.$orgId.analytics'
+import { Route as AuthenticatedOrgsOrgIdCallsRouteImport } from './routes/_authenticated/orgs.$orgId.calls'
+import { Route as AuthenticatedOrgsOrgIdKnowledgeRouteImport } from './routes/_authenticated/orgs.$orgId.knowledge'
 import { Route as AuthenticatedOrgsOrgIdMembersRouteImport } from './routes/_authenticated/orgs.$orgId.members'
+import { Route as AuthenticatedOrgsOrgIdMessagingRouteImport } from './routes/_authenticated/orgs.$orgId.messaging'
 import { Route as AuthenticatedOrgsOrgIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.settings'
 import { Route as AuthenticatedOrgsOrgIdTelephonyRouteImport } from './routes/_authenticated/orgs.$orgId.telephony'
 import { Route as AuthenticatedOrgsOrgIdAgentsIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.index'
@@ -88,6 +96,12 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminActivityRoute =
+  AuthenticatedAdminActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminOrgsRoute = AuthenticatedAdminOrgsRouteImport.update({
   id: '/orgs',
   path: '/orgs',
@@ -108,6 +122,23 @@ const AuthenticatedOrgsOrgIdRoute = AuthenticatedOrgsOrgIdRouteImport.update({
   path: '/$orgId',
   getParentRoute: () => AuthenticatedOrgsRoute,
 } as any)
+const ApiKnowledgeEmbedRoute = ApiKnowledgeEmbedRouteImport.update({
+  id: '/api/knowledge/embed',
+  path: '/api/knowledge/embed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiKnowledgeUploadDocumentRoute =
+  ApiKnowledgeUploadDocumentRouteImport.update({
+    id: '/api/knowledge/upload-document',
+    path: '/api/knowledge/upload-document',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiMessagingSendTestMessageRoute =
+  ApiMessagingSendTestMessageRouteImport.update({
+    id: '/api/messaging/send-test-message',
+    path: '/api/messaging/send-test-message',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiTelephonyTestConnectionRoute =
   ApiTelephonyTestConnectionRouteImport.update({
     id: '/api/telephony/test-connection',
@@ -126,10 +157,34 @@ const AuthenticatedOrgsOrgIdAgentsRoute =
     path: '/agents',
     getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
   } as any)
+const AuthenticatedOrgsOrgIdAnalyticsRoute =
+  AuthenticatedOrgsOrgIdAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdCallsRoute =
+  AuthenticatedOrgsOrgIdCallsRouteImport.update({
+    id: '/calls',
+    path: '/calls',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdKnowledgeRoute =
+  AuthenticatedOrgsOrgIdKnowledgeRouteImport.update({
+    id: '/knowledge',
+    path: '/knowledge',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
 const AuthenticatedOrgsOrgIdMembersRoute =
   AuthenticatedOrgsOrgIdMembersRouteImport.update({
     id: '/members',
     path: '/members',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdMessagingRoute =
+  AuthenticatedOrgsOrgIdMessagingRouteImport.update({
+    id: '/messaging',
+    path: '/messaging',
     getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
   } as any)
 const AuthenticatedOrgsOrgIdSettingsRoute =
@@ -209,13 +264,21 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/orgs': typeof AuthenticatedAdminOrgsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
+  '/api/knowledge/embed': typeof ApiKnowledgeEmbedRoute
+  '/api/knowledge/upload-document': typeof ApiKnowledgeUploadDocumentRoute
+  '/api/messaging/send-test-message': typeof ApiMessagingSendTestMessageRoute
   '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/orgs/$orgId/analytics': typeof AuthenticatedOrgsOrgIdAnalyticsRoute
+  '/orgs/$orgId/calls': typeof AuthenticatedOrgsOrgIdCallsRoute
+  '/orgs/$orgId/knowledge': typeof AuthenticatedOrgsOrgIdKnowledgeRoute
   '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
+  '/orgs/$orgId/messaging': typeof AuthenticatedOrgsOrgIdMessagingRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
   '/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
@@ -238,11 +301,19 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/orgs': typeof AuthenticatedAdminOrgsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/api/knowledge/embed': typeof ApiKnowledgeEmbedRoute
+  '/api/knowledge/upload-document': typeof ApiKnowledgeUploadDocumentRoute
+  '/api/messaging/send-test-message': typeof ApiMessagingSendTestMessageRoute
   '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/orgs': typeof AuthenticatedOrgsIndexRoute
+  '/orgs/$orgId/analytics': typeof AuthenticatedOrgsOrgIdAnalyticsRoute
+  '/orgs/$orgId/calls': typeof AuthenticatedOrgsOrgIdCallsRoute
+  '/orgs/$orgId/knowledge': typeof AuthenticatedOrgsOrgIdKnowledgeRoute
   '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
+  '/orgs/$orgId/messaging': typeof AuthenticatedOrgsOrgIdMessagingRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
   '/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdIndexRoute
@@ -266,13 +337,21 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/orgs': typeof AuthenticatedAdminOrgsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
+  '/api/knowledge/embed': typeof ApiKnowledgeEmbedRoute
+  '/api/knowledge/upload-document': typeof ApiKnowledgeUploadDocumentRoute
+  '/api/messaging/send-test-message': typeof ApiMessagingSendTestMessageRoute
   '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/_authenticated/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  '/_authenticated/orgs/$orgId/analytics': typeof AuthenticatedOrgsOrgIdAnalyticsRoute
+  '/_authenticated/orgs/$orgId/calls': typeof AuthenticatedOrgsOrgIdCallsRoute
+  '/_authenticated/orgs/$orgId/knowledge': typeof AuthenticatedOrgsOrgIdKnowledgeRoute
   '/_authenticated/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
+  '/_authenticated/orgs/$orgId/messaging': typeof AuthenticatedOrgsOrgIdMessagingRoute
   '/_authenticated/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
   '/_authenticated/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/_authenticated/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
@@ -298,13 +377,21 @@ export interface FileRouteTypes {
     | '/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/admin/activity'
     | '/admin/orgs'
     | '/admin/users'
     | '/orgs/$orgId'
+    | '/api/knowledge/embed'
+    | '/api/knowledge/upload-document'
+    | '/api/messaging/send-test-message'
     | '/api/telephony/test-connection'
     | '/orgs/'
     | '/orgs/$orgId/agents'
+    | '/orgs/$orgId/analytics'
+    | '/orgs/$orgId/calls'
+    | '/orgs/$orgId/knowledge'
     | '/orgs/$orgId/members'
+    | '/orgs/$orgId/messaging'
     | '/orgs/$orgId/settings'
     | '/orgs/$orgId/telephony'
     | '/orgs/$orgId/'
@@ -327,11 +414,19 @@ export interface FileRouteTypes {
     | '/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/admin/activity'
     | '/admin/orgs'
     | '/admin/users'
+    | '/api/knowledge/embed'
+    | '/api/knowledge/upload-document'
+    | '/api/messaging/send-test-message'
     | '/api/telephony/test-connection'
     | '/orgs'
+    | '/orgs/$orgId/analytics'
+    | '/orgs/$orgId/calls'
+    | '/orgs/$orgId/knowledge'
     | '/orgs/$orgId/members'
+    | '/orgs/$orgId/messaging'
     | '/orgs/$orgId/settings'
     | '/orgs/$orgId/telephony'
     | '/orgs/$orgId'
@@ -354,13 +449,21 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/_authenticated/admin/activity'
     | '/_authenticated/admin/orgs'
     | '/_authenticated/admin/users'
     | '/_authenticated/orgs/$orgId'
+    | '/api/knowledge/embed'
+    | '/api/knowledge/upload-document'
+    | '/api/messaging/send-test-message'
     | '/api/telephony/test-connection'
     | '/_authenticated/orgs/'
     | '/_authenticated/orgs/$orgId/agents'
+    | '/_authenticated/orgs/$orgId/analytics'
+    | '/_authenticated/orgs/$orgId/calls'
+    | '/_authenticated/orgs/$orgId/knowledge'
     | '/_authenticated/orgs/$orgId/members'
+    | '/_authenticated/orgs/$orgId/messaging'
     | '/_authenticated/orgs/$orgId/settings'
     | '/_authenticated/orgs/$orgId/telephony'
     | '/_authenticated/orgs/$orgId/'
@@ -381,6 +484,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   VerifyEmailRoute: typeof VerifyEmailRoute
   InviteTokenRoute: typeof InviteTokenRoute
+  ApiKnowledgeEmbedRoute: typeof ApiKnowledgeEmbedRoute
+  ApiKnowledgeUploadDocumentRoute: typeof ApiKnowledgeUploadDocumentRoute
+  ApiMessagingSendTestMessageRoute: typeof ApiMessagingSendTestMessageRoute
   ApiTelephonyTestConnectionRoute: typeof ApiTelephonyTestConnectionRoute
   ApiPublicExotelAudioAudioIdRoute: typeof ApiPublicExotelAudioAudioIdRoute
   ApiPublicExotelVoiceAudioIdRoute: typeof ApiPublicExotelVoiceAudioIdRoute
@@ -458,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/activity': {
+      id: '/_authenticated/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AuthenticatedAdminActivityRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/orgs': {
       id: '/_authenticated/admin/orgs'
       path: '/orgs'
@@ -486,6 +599,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
     }
+    '/api/knowledge/embed': {
+      id: '/api/knowledge/embed'
+      path: '/api/knowledge/embed'
+      fullPath: '/api/knowledge/embed'
+      preLoaderRoute: typeof ApiKnowledgeEmbedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/knowledge/upload-document': {
+      id: '/api/knowledge/upload-document'
+      path: '/api/knowledge/upload-document'
+      fullPath: '/api/knowledge/upload-document'
+      preLoaderRoute: typeof ApiKnowledgeUploadDocumentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/messaging/send-test-message': {
+      id: '/api/messaging/send-test-message'
+      path: '/api/messaging/send-test-message'
+      fullPath: '/api/messaging/send-test-message'
+      preLoaderRoute: typeof ApiMessagingSendTestMessageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/telephony/test-connection': {
       id: '/api/telephony/test-connection'
       path: '/api/telephony/test-connection'
@@ -507,11 +641,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdRoute
     }
+    '/_authenticated/orgs/$orgId/analytics': {
+      id: '/_authenticated/orgs/$orgId/analytics'
+      path: '/analytics'
+      fullPath: '/orgs/$orgId/analytics'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/calls': {
+      id: '/_authenticated/orgs/$orgId/calls'
+      path: '/calls'
+      fullPath: '/orgs/$orgId/calls'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdCallsRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/knowledge': {
+      id: '/_authenticated/orgs/$orgId/knowledge'
+      path: '/knowledge'
+      fullPath: '/orgs/$orgId/knowledge'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdKnowledgeRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
     '/_authenticated/orgs/$orgId/members': {
       id: '/_authenticated/orgs/$orgId/members'
       path: '/members'
       fullPath: '/orgs/$orgId/members'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdMembersRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/messaging': {
+      id: '/_authenticated/orgs/$orgId/messaging'
+      path: '/messaging'
+      fullPath: '/orgs/$orgId/messaging'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdMessagingRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdRoute
     }
     '/_authenticated/orgs/$orgId/settings': {
@@ -595,11 +757,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminOrgsRoute: typeof AuthenticatedAdminOrgsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
   AuthenticatedAdminOrgsRoute: AuthenticatedAdminOrgsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
 }
@@ -666,7 +830,11 @@ const AuthenticatedOrgsOrgIdAgentsRouteWithChildren =
 
 interface AuthenticatedOrgsOrgIdRouteChildren {
   AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
+  AuthenticatedOrgsOrgIdAnalyticsRoute: typeof AuthenticatedOrgsOrgIdAnalyticsRoute
+  AuthenticatedOrgsOrgIdCallsRoute: typeof AuthenticatedOrgsOrgIdCallsRoute
+  AuthenticatedOrgsOrgIdKnowledgeRoute: typeof AuthenticatedOrgsOrgIdKnowledgeRoute
   AuthenticatedOrgsOrgIdMembersRoute: typeof AuthenticatedOrgsOrgIdMembersRoute
+  AuthenticatedOrgsOrgIdMessagingRoute: typeof AuthenticatedOrgsOrgIdMessagingRoute
   AuthenticatedOrgsOrgIdSettingsRoute: typeof AuthenticatedOrgsOrgIdSettingsRoute
   AuthenticatedOrgsOrgIdTelephonyRoute: typeof AuthenticatedOrgsOrgIdTelephonyRoute
   AuthenticatedOrgsOrgIdIndexRoute: typeof AuthenticatedOrgsOrgIdIndexRoute
@@ -676,7 +844,11 @@ const AuthenticatedOrgsOrgIdRouteChildren: AuthenticatedOrgsOrgIdRouteChildren =
   {
     AuthenticatedOrgsOrgIdAgentsRoute:
       AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
+    AuthenticatedOrgsOrgIdAnalyticsRoute: AuthenticatedOrgsOrgIdAnalyticsRoute,
+    AuthenticatedOrgsOrgIdCallsRoute: AuthenticatedOrgsOrgIdCallsRoute,
+    AuthenticatedOrgsOrgIdKnowledgeRoute: AuthenticatedOrgsOrgIdKnowledgeRoute,
     AuthenticatedOrgsOrgIdMembersRoute: AuthenticatedOrgsOrgIdMembersRoute,
+    AuthenticatedOrgsOrgIdMessagingRoute: AuthenticatedOrgsOrgIdMessagingRoute,
     AuthenticatedOrgsOrgIdSettingsRoute: AuthenticatedOrgsOrgIdSettingsRoute,
     AuthenticatedOrgsOrgIdTelephonyRoute: AuthenticatedOrgsOrgIdTelephonyRoute,
     AuthenticatedOrgsOrgIdIndexRoute: AuthenticatedOrgsOrgIdIndexRoute,
@@ -733,6 +905,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   VerifyEmailRoute: VerifyEmailRoute,
   InviteTokenRoute: InviteTokenRoute,
+  ApiKnowledgeEmbedRoute: ApiKnowledgeEmbedRoute,
+  ApiKnowledgeUploadDocumentRoute: ApiKnowledgeUploadDocumentRoute,
+  ApiMessagingSendTestMessageRoute: ApiMessagingSendTestMessageRoute,
   ApiTelephonyTestConnectionRoute: ApiTelephonyTestConnectionRoute,
   ApiPublicExotelAudioAudioIdRoute: ApiPublicExotelAudioAudioIdRoute,
   ApiPublicExotelVoiceAudioIdRoute: ApiPublicExotelVoiceAudioIdRoute,

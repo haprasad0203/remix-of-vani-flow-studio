@@ -121,22 +121,43 @@ const STATUS_MAP: Record<RecentCall["status"], { label: string; variant: "defaul
 // ─── Dashboard component ────────────────────────────────
 
 function Dashboard() {
-  const { orgId } = Route.useParams();
+  const { orgId } = Route.useParams() as any;
   const { role, canEdit, loading: roleLoading } = useOrgRole(orgId);
   const [org, setOrg] = useState<Org | null>(null);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [profileName, setProfileName] = useState("");
+  
+  const [kpis, setKpis] = useState<{
+    calls_today: number;
+    completed_today: number;
+    avg_duration_seconds: number;
+  }>({ calls_today: 0, completed_today: 0, avg_duration_seconds: 0 });
+  
+  const [recentCalls, setRecentCalls] = useState<any[]>([]);
 
   useEffect(() => {
     let active = true;
     async function load() {
-      const [orgRes, userRes] = await Promise.all([
+      const [orgRes, userRes, kpiRes, callsRes] = await Promise.all([
         supabase.from("organizations").select("id, name").eq("id", orgId).maybeSingle(),
         supabase.auth.getUser(),
+        (supabase as any).rpc("get_dashboard_kpis", { _org_id: orgId }),
+        (supabase as any)
+          .from("calls")
+          .select("id, phone_number, status, duration_seconds, started_at, agents(name)")
+          .eq("org_id", orgId)
+          .order("started_at", { ascending: false })
+          .limit(5)
       ]);
       if (!active) return;
       setOrg(orgRes.data);
+      if (kpiRes.data) {
+        setKpis(kpiRes.data);
+      }
+      if (callsRes.data) {
+        setRecentCalls(callsRes.data);
+      }
       const user = userRes.data.user;
       if (user) {
         setEmail(user.email ?? "");
@@ -229,7 +250,47 @@ function Dashboard() {
 
       {/* ── KPI Row ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {PLACEHOLDER_KPIS.map((kpi) => {
+        {(() => {
+          const kpiItems: KPI[] = [
+            {
+              label: "Calls today",
+              value: String(kpis.calls_today),
+              delta: "—",
+              deltaType: "neutral",
+              icon: Phone,
+              iconColor: "text-banyan",
+              iconBg: "bg-banyan-tint",
+            },
+            {
+              label: "COD confirmed",
+              value: String(kpis.completed_today),
+              delta: "—",
+              deltaType: "neutral",
+              icon: CheckCircle,
+              iconColor: "text-teal",
+              iconBg: "bg-teal-tint",
+            },
+            {
+              label: "Completion Rate",
+              value: kpis.calls_today > 0 ? Math.round((kpis.completed_today / kpis.calls_today) * 100) + '%' : '0%',
+              delta: "—",
+              deltaType: "neutral",
+              icon: TrendingUp,
+              iconColor: "text-indigo",
+              iconBg: "bg-indigo-tint",
+            },
+            {
+              label: "Avg response",
+              value: kpis.avg_duration_seconds > 0 ? `${kpis.avg_duration_seconds}s` : "0s",
+              delta: "—",
+              deltaType: "neutral",
+              icon: Clock,
+              iconColor: "text-terra",
+              iconBg: "bg-terra-tint",
+            },
+          ];
+          return kpiItems;
+        })().map((kpi) => {
           const Icon = kpi.icon;
           return (
             <Card
@@ -343,13 +404,15 @@ function Dashboard() {
       <Card>
         <div className="p-4 border-b border-border/40 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-foreground">Recent Calls</h3>
-          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1" disabled>
-            <TrendingUp className="h-3.5 w-3.5" />
-            View all
+          <Button asChild variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
+            <Link to="/orgs/$orgId/calls" params={{ orgId }}>
+              <TrendingUp className="h-3.5 w-3.5" />
+              View all
+            </Link>
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full text-left">
             <thead>
               <tr className="border-b border-border/40 bg-muted/30">
                 <th className="text-eyebrow text-left px-4 py-2.5 font-semibold">Phone</th>
@@ -360,27 +423,57 @@ function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {PLACEHOLDER_CALLS.map((call) => {
-                const st = STATUS_MAP[call.status];
-                const StatusIcon = st.icon;
-                return (
-                  <tr
-                    key={call.id}
-                    className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors"
-                  >
-                    <td className="px-4 py-3 text-data text-foreground">{call.phone}</td>
-                    <td className="px-4 py-3 text-sm text-foreground">{call.agentName}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant={st.variant} className="gap-1 text-xs">
-                        <StatusIcon className="h-3 w-3" />
-                        {st.label}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-data text-muted-foreground">{call.duration}</td>
-                    <td className="px-4 py-3 text-caption">{call.time}</td>
-                  </tr>
-                );
-              })}
+              {recentCalls.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center py-10 text-xs text-muted-foreground italic">
+                    No calls yet — once your telephony is connected and campaigns run, calls will show up here.
+                  </td>
+                </tr>
+              ) : (
+                recentCalls.map((call) => {
+                  const cleanedStatus = call.status === "in_progress" ? "in-progress" : call.status;
+                  const st = STATUS_MAP[cleanedStatus as "completed" | "failed" | "in-progress" | "missed"] || {
+                    label: call.status,
+                    variant: "outline",
+                    icon: PhoneCall,
+                  };
+                  const StatusIcon = st.icon;
+                  
+                  // Masking helper
+                  const maskText = (num: string) => {
+                    if (!num) return "—";
+                    const cl = num.trim();
+                    if (cl.length <= 4) return cl;
+                    return cl.substring(0, cl.length - 4).replace(/\d/g, "•") + cl.substring(cl.length - 4);
+                  };
+
+                  return (
+                    <tr
+                      key={call.id}
+                      className="border-b border-border/20 last:border-0 hover:bg-muted/20 transition-colors"
+                    >
+                      <td className="px-4 py-3 text-data text-foreground font-semibold font-mono">
+                        {maskText(call.phone_number)}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-foreground font-medium">
+                        {call.agents?.name || "Unknown Agent"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge variant={st.variant} className="gap-1 text-[10px] py-0.5">
+                          <StatusIcon className="h-3 w-3" />
+                          {st.label}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-data text-muted-foreground font-mono">
+                        {call.duration_seconds !== null ? `${Math.floor(call.duration_seconds / 60)}:${(call.duration_seconds % 60).toString().padStart(2, "0")}` : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-caption font-mono">
+                        {new Date(call.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

@@ -1,5 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useParams } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import {
   FlowNode,
   FlowDraft,
@@ -31,6 +33,23 @@ const END_VALUE = "__end__";
 export function StepConfig({ node, draft, onChange }: Props) {
   const meta = NODE_TYPE_MAP[node.type];
   const [testing, setTesting] = useState(false);
+  const params = useParams({ strict: false }) as any;
+  const orgId = params.orgId;
+  const [dbTemplates, setDbTemplates] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (node.type === "followup" && orgId) {
+      (async () => {
+        const { data } = await (supabase as any)
+          .from("messaging_templates")
+          .select("id, name, template, variables")
+          .eq("org_id", orgId);
+        if (data) {
+          setDbTemplates(data);
+        }
+      })();
+    }
+  }, [node.type, orgId]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const tts = useServerFn(synthesizeSpeech);
 
@@ -253,7 +272,34 @@ export function StepConfig({ node, draft, onChange }: Props) {
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Template">
+            {dbTemplates.length > 0 && (
+              <Field label="Load Saved Template">
+                <Select
+                  onValueChange={(val) => {
+                    const matched = dbTemplates.find((t) => t.id === val);
+                    if (matched) {
+                      setConfig("template", matched.template);
+                      if (matched.variables) {
+                        setConfig("variables", matched.variables);
+                      }
+                      toast.success(`Loaded template: ${matched.name}`);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="h-9 border-border/80 text-xs">
+                    <SelectValue placeholder="Select a saved template..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dbTemplates.map((t) => (
+                      <SelectItem key={t.id} value={t.id} className="text-xs">
+                        {t.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+            )}
+            <Field label="Template text body">
               <Textarea
                 rows={2}
                 value={(node.config.template as string) ?? ""}

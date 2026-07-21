@@ -75,8 +75,8 @@ function getNavGroups(orgId: string): NavGroup[] {
         {
           label: "Analytics",
           icon: BarChart3,
-          disabled: true,
-          comingSoon: true,
+          to: "/orgs/$orgId/analytics",
+          matchPrefix: `/orgs/${orgId}/analytics`,
         },
       ],
     },
@@ -92,8 +92,8 @@ function getNavGroups(orgId: string): NavGroup[] {
         {
           label: "Knowledge Base",
           icon: BookOpen,
-          disabled: true,
-          comingSoon: true,
+          to: "/orgs/$orgId/knowledge",
+          matchPrefix: `/orgs/${orgId}/knowledge`,
         },
       ],
     },
@@ -109,8 +109,8 @@ function getNavGroups(orgId: string): NavGroup[] {
         {
           label: "Calls",
           icon: Phone,
-          disabled: true,
-          comingSoon: true,
+          to: "/orgs/$orgId/calls",
+          matchPrefix: `/orgs/${orgId}/calls`,
         },
       ],
     },
