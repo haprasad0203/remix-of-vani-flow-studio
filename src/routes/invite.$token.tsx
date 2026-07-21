@@ -30,7 +30,7 @@ function InviteAcceptPage() {
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [invite, setInvite] = useState<Invite | null>(null);
   const [errorStatus, setErrorStatus] = useState<
-    "none" | "not_found" | "revoked" | "accepted" | "email_mismatch" | "fetch_error"
+    "none" | "not_found" | "revoked" | "accepted" | "email_mismatch" | "fetch_error" | "expired"
   >("none");
   const [errorMessage, setErrorMessage] = useState("");
   const [accepting, setAccepting] = useState(false);
@@ -44,12 +44,9 @@ function InviteAcceptPage() {
       const { data: userRes } = await supabase.auth.getUser();
       setCurrentUser(userRes.user ?? null);
 
-      // 2. Fetch the invite details
-      const { data: inviteRes, error: inviteErr } = await supabase
-        .from("org_invites")
-        .select("*, organizations(name)")
-        .eq("token", token)
-        .maybeSingle();
+      // 2. Fetch the invite details via secure RPC
+      const { data: previewRes, error: inviteErr } = await (supabase as any)
+        .rpc("get_invite_preview", { invite_token: token });
 
       if (inviteErr) {
         setErrorStatus("fetch_error");
@@ -57,21 +54,38 @@ function InviteAcceptPage() {
         return;
       }
 
-      if (!inviteRes) {
+      const preview = previewRes as {
+        found: boolean;
+        status: "pending" | "accepted" | "revoked" | "expired" | "not_found";
+        org_name?: string;
+        email?: string;
+        role?: "owner" | "editor" | "viewer";
+      };
+
+      if (!preview || !preview.found) {
         setErrorStatus("not_found");
         return;
       }
 
-      const inviteData = inviteRes as unknown as Invite;
+      const inviteData: Invite = {
+        id: token,
+        org_id: "",
+        email: preview.email || "",
+        role: preview.role || "viewer",
+        status: preview.status === "expired" ? "pending" : (preview.status as any),
+        organizations: preview.org_name ? { name: preview.org_name } : null,
+      };
       setInvite(inviteData);
 
-      if (inviteData.status === "revoked") {
+      if (preview.status === "revoked") {
         setErrorStatus("revoked");
-      } else if (inviteData.status === "accepted") {
+      } else if (preview.status === "accepted") {
         setErrorStatus("accepted");
-      } else if (userRes.user) {
+      } else if (preview.status === "expired") {
+        setErrorStatus("expired");
+      } else if (userRes.user && preview.email) {
         const userEmail = userRes.user.email?.toLowerCase();
-        const inviteEmail = inviteData.email.toLowerCase();
+        const inviteEmail = preview.email.toLowerCase();
         if (userEmail !== inviteEmail) {
           setErrorStatus("email_mismatch");
         }
@@ -176,6 +190,13 @@ function InviteAcceptPage() {
       </div>
     </div>
   );
+
+  if (errorStatus === "expired") {
+    return renderError(
+      "Invitation Expired",
+      "This invitation link has expired. Invitations are valid for 7 days. Please request a new invite from the organization owner."
+    );
+  }
 
   if (errorStatus === "not_found") {
     return renderError(

@@ -7,7 +7,19 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth" });
-    return { user: data.user };
+    if (!data.user.email_confirmed_at) throw redirect({ to: "/verify-email" });
+
+    // Fetch the user's profile to retrieve name, email, and admin status
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_platform_admin, name, email")
+      .eq("id", data.user.id)
+      .maybeSingle();
+
+    return { 
+      user: data.user,
+      profile: profile || { is_platform_admin: false, name: null, email: data.user.email || null }
+    };
   },
   component: () => <AppShell />,
 });

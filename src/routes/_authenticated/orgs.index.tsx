@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +30,7 @@ type OrgMembership = {
 };
 
 function OrgPicker() {
+  const navigate = useNavigate();
   const [orgs, setOrgs] = useState<OrgMembership[] | null>(null);
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
@@ -51,6 +52,11 @@ function OrgPicker() {
     if (error) {
       toast.error(error.message);
       setOrgs([]);
+      return;
+    }
+    
+    if (!data || data.length === 0) {
+      navigate({ to: "/onboarding" });
       return;
     }
     setOrgs(data ?? []);

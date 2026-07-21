@@ -12,16 +12,23 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as InviteTokenRouteImport } from './routes/invite.$token'
+import { Route as AuthenticatedAdminOrgsRouteImport } from './routes/_authenticated/admin.orgs'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedOrgsIndexRouteImport } from './routes/_authenticated/orgs.index'
 import { Route as AuthenticatedOrgsOrgIdRouteImport } from './routes/_authenticated/orgs.$orgId'
+import { Route as ApiTelephonyTestConnectionRouteImport } from './routes/api/telephony/test-connection'
 import { Route as AuthenticatedOrgsOrgIdIndexRouteImport } from './routes/_authenticated/orgs.$orgId.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsRouteImport } from './routes/_authenticated/orgs.$orgId.agents'
 import { Route as AuthenticatedOrgsOrgIdMembersRouteImport } from './routes/_authenticated/orgs.$orgId.members'
 import { Route as AuthenticatedOrgsOrgIdSettingsRouteImport } from './routes/_authenticated/orgs.$orgId.settings'
+import { Route as AuthenticatedOrgsOrgIdTelephonyRouteImport } from './routes/_authenticated/orgs.$orgId.telephony'
 import { Route as AuthenticatedOrgsOrgIdAgentsIndexRouteImport } from './routes/_authenticated/orgs.$orgId.agents.index'
 import { Route as AuthenticatedOrgsOrgIdAgentsAgentIdRouteImport } from './routes/_authenticated/orgs.$orgId.agents.$agentId'
 import { Route as ApiPublicExotelAudioAudioIdRouteImport } from './routes/api/public/exotel/audio.$audioId'
@@ -46,6 +53,21 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOrgsRoute = AuthenticatedOrgsRouteImport.update({
   id: '/orgs',
   path: '/orgs',
@@ -66,6 +88,16 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminOrgsRoute = AuthenticatedAdminOrgsRouteImport.update({
+  id: '/orgs',
+  path: '/orgs',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedOrgsIndexRoute = AuthenticatedOrgsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -76,6 +108,12 @@ const AuthenticatedOrgsOrgIdRoute = AuthenticatedOrgsOrgIdRouteImport.update({
   path: '/$orgId',
   getParentRoute: () => AuthenticatedOrgsRoute,
 } as any)
+const ApiTelephonyTestConnectionRoute =
+  ApiTelephonyTestConnectionRouteImport.update({
+    id: '/api/telephony/test-connection',
+    path: '/api/telephony/test-connection',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedOrgsOrgIdIndexRoute =
   AuthenticatedOrgsOrgIdIndexRouteImport.update({
     id: '/',
@@ -98,6 +136,12 @@ const AuthenticatedOrgsOrgIdSettingsRoute =
   AuthenticatedOrgsOrgIdSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
+  } as any)
+const AuthenticatedOrgsOrgIdTelephonyRoute =
+  AuthenticatedOrgsOrgIdTelephonyRouteImport.update({
+    id: '/telephony',
+    path: '/telephony',
     getParentRoute: () => AuthenticatedOrgsOrgIdRoute,
   } as any)
 const AuthenticatedOrgsOrgIdAgentsIndexRoute =
@@ -158,15 +202,22 @@ const AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/verify-email': typeof VerifyEmailRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/admin/orgs': typeof AuthenticatedAdminOrgsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
+  '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
@@ -181,12 +232,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/verify-email': typeof VerifyEmailRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/admin/orgs': typeof AuthenticatedAdminOrgsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/orgs': typeof AuthenticatedOrgsIndexRoute
   '/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/orgs/$orgId': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
   '/api/public/exotel/voice/$audioId': typeof ApiPublicExotelVoiceAudioIdRoute
@@ -201,15 +259,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/verify-email': typeof VerifyEmailRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/orgs': typeof AuthenticatedOrgsRouteWithChildren
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/_authenticated/admin/orgs': typeof AuthenticatedAdminOrgsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/orgs/$orgId': typeof AuthenticatedOrgsOrgIdRouteWithChildren
+  '/api/telephony/test-connection': typeof ApiTelephonyTestConnectionRoute
   '/_authenticated/orgs/': typeof AuthenticatedOrgsIndexRoute
   '/_authenticated/orgs/$orgId/agents': typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   '/_authenticated/orgs/$orgId/members': typeof AuthenticatedOrgsOrgIdMembersRoute
   '/_authenticated/orgs/$orgId/settings': typeof AuthenticatedOrgsOrgIdSettingsRoute
+  '/_authenticated/orgs/$orgId/telephony': typeof AuthenticatedOrgsOrgIdTelephonyRoute
   '/_authenticated/orgs/$orgId/': typeof AuthenticatedOrgsOrgIdIndexRoute
   '/_authenticated/orgs/$orgId/agents/$agentId': typeof AuthenticatedOrgsOrgIdAgentsAgentIdRouteWithChildren
   '/api/public/exotel/audio/$audioId': typeof ApiPublicExotelAudioAudioIdRoute
@@ -226,15 +291,22 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/verify-email'
+    | '/admin'
+    | '/onboarding'
     | '/orgs'
     | '/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/admin/orgs'
+    | '/admin/users'
     | '/orgs/$orgId'
+    | '/api/telephony/test-connection'
     | '/orgs/'
     | '/orgs/$orgId/agents'
     | '/orgs/$orgId/members'
     | '/orgs/$orgId/settings'
+    | '/orgs/$orgId/telephony'
     | '/orgs/$orgId/'
     | '/orgs/$orgId/agents/$agentId'
     | '/api/public/exotel/audio/$audioId'
@@ -249,12 +321,19 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/verify-email'
+    | '/admin'
+    | '/onboarding'
     | '/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/admin/orgs'
+    | '/admin/users'
+    | '/api/telephony/test-connection'
     | '/orgs'
     | '/orgs/$orgId/members'
     | '/orgs/$orgId/settings'
+    | '/orgs/$orgId/telephony'
     | '/orgs/$orgId'
     | '/api/public/exotel/audio/$audioId'
     | '/api/public/exotel/voice/$audioId'
@@ -268,15 +347,22 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/verify-email'
+    | '/_authenticated/admin'
+    | '/_authenticated/onboarding'
     | '/_authenticated/orgs'
     | '/_authenticated/profile'
     | '/auth/reset-password'
     | '/invite/$token'
+    | '/_authenticated/admin/orgs'
+    | '/_authenticated/admin/users'
     | '/_authenticated/orgs/$orgId'
+    | '/api/telephony/test-connection'
     | '/_authenticated/orgs/'
     | '/_authenticated/orgs/$orgId/agents'
     | '/_authenticated/orgs/$orgId/members'
     | '/_authenticated/orgs/$orgId/settings'
+    | '/_authenticated/orgs/$orgId/telephony'
     | '/_authenticated/orgs/$orgId/'
     | '/_authenticated/orgs/$orgId/agents/$agentId'
     | '/api/public/exotel/audio/$audioId'
@@ -293,7 +379,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  VerifyEmailRoute: typeof VerifyEmailRoute
   InviteTokenRoute: typeof InviteTokenRoute
+  ApiTelephonyTestConnectionRoute: typeof ApiTelephonyTestConnectionRoute
   ApiPublicExotelAudioAudioIdRoute: typeof ApiPublicExotelAudioAudioIdRoute
   ApiPublicExotelVoiceAudioIdRoute: typeof ApiPublicExotelVoiceAudioIdRoute
 }
@@ -320,6 +408,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/orgs': {
       id: '/_authenticated/orgs'
@@ -349,6 +458,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/orgs': {
+      id: '/_authenticated/admin/orgs'
+      path: '/orgs'
+      fullPath: '/admin/orgs'
+      preLoaderRoute: typeof AuthenticatedAdminOrgsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/orgs/': {
       id: '/_authenticated/orgs/'
       path: '/'
@@ -362,6 +485,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/orgs/$orgId'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdRouteImport
       parentRoute: typeof AuthenticatedOrgsRoute
+    }
+    '/api/telephony/test-connection': {
+      id: '/api/telephony/test-connection'
+      path: '/api/telephony/test-connection'
+      fullPath: '/api/telephony/test-connection'
+      preLoaderRoute: typeof ApiTelephonyTestConnectionRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/orgs/$orgId/': {
       id: '/_authenticated/orgs/$orgId/'
@@ -389,6 +519,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/orgs/$orgId/settings'
       preLoaderRoute: typeof AuthenticatedOrgsOrgIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedOrgsOrgIdRoute
+    }
+    '/_authenticated/orgs/$orgId/telephony': {
+      id: '/_authenticated/orgs/$orgId/telephony'
+      path: '/telephony'
+      fullPath: '/orgs/$orgId/telephony'
+      preLoaderRoute: typeof AuthenticatedOrgsOrgIdTelephonyRouteImport
       parentRoute: typeof AuthenticatedOrgsOrgIdRoute
     }
     '/_authenticated/orgs/$orgId/agents/': {
@@ -457,6 +594,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminOrgsRoute: typeof AuthenticatedAdminOrgsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminOrgsRoute: AuthenticatedAdminOrgsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdRouteChildren {
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdVersionsRoute
   AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute: typeof AuthenticatedOrgsOrgIdAgentsAgentIdFlowsFlowIdIndexRoute
@@ -518,6 +668,7 @@ interface AuthenticatedOrgsOrgIdRouteChildren {
   AuthenticatedOrgsOrgIdAgentsRoute: typeof AuthenticatedOrgsOrgIdAgentsRouteWithChildren
   AuthenticatedOrgsOrgIdMembersRoute: typeof AuthenticatedOrgsOrgIdMembersRoute
   AuthenticatedOrgsOrgIdSettingsRoute: typeof AuthenticatedOrgsOrgIdSettingsRoute
+  AuthenticatedOrgsOrgIdTelephonyRoute: typeof AuthenticatedOrgsOrgIdTelephonyRoute
   AuthenticatedOrgsOrgIdIndexRoute: typeof AuthenticatedOrgsOrgIdIndexRoute
 }
 
@@ -527,6 +678,7 @@ const AuthenticatedOrgsOrgIdRouteChildren: AuthenticatedOrgsOrgIdRouteChildren =
       AuthenticatedOrgsOrgIdAgentsRouteWithChildren,
     AuthenticatedOrgsOrgIdMembersRoute: AuthenticatedOrgsOrgIdMembersRoute,
     AuthenticatedOrgsOrgIdSettingsRoute: AuthenticatedOrgsOrgIdSettingsRoute,
+    AuthenticatedOrgsOrgIdTelephonyRoute: AuthenticatedOrgsOrgIdTelephonyRoute,
     AuthenticatedOrgsOrgIdIndexRoute: AuthenticatedOrgsOrgIdIndexRoute,
   }
 
@@ -549,11 +701,15 @@ const AuthenticatedOrgsRouteWithChildren =
   AuthenticatedOrgsRoute._addFileChildren(AuthenticatedOrgsRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOrgsRoute: typeof AuthenticatedOrgsRouteWithChildren
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOrgsRoute: AuthenticatedOrgsRouteWithChildren,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
@@ -575,7 +731,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  VerifyEmailRoute: VerifyEmailRoute,
   InviteTokenRoute: InviteTokenRoute,
+  ApiTelephonyTestConnectionRoute: ApiTelephonyTestConnectionRoute,
   ApiPublicExotelAudioAudioIdRoute: ApiPublicExotelAudioAudioIdRoute,
   ApiPublicExotelVoiceAudioIdRoute: ApiPublicExotelVoiceAudioIdRoute,
 }

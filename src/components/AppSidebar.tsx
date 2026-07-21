@@ -154,11 +154,24 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const { theme, setTheme } = useTheme();
   const matches = useMatches();
   const [email, setEmail] = useState("");
+  const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
   const [orgSwitcherOpen, setOrgSwitcherOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ""));
+    supabase.auth.getUser().then(({ data }) => {
+      setEmail(data.user?.email ?? "");
+      if (data.user) {
+        (supabase as any)
+          .from("profiles")
+          .select("is_platform_admin")
+          .eq("id", data.user.id)
+          .maybeSingle()
+          .then(({ data: profile }: any) => {
+            setIsPlatformAdmin(profile?.is_platform_admin ?? false);
+          });
+      }
+    });
   }, []);
 
   const currentOrg = orgs.find((o) => o.org_id === orgId);
@@ -352,6 +365,25 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               </div>
             </div>
           ))}
+          {isPlatformAdmin && (
+            <div className="pt-2 border-t border-border/40">
+              {!collapsed && (
+                <div className="text-eyebrow px-2.5 py-1.5 text-amber-600 dark:text-amber-400">Admin</div>
+              )}
+              <div className="space-y-0.5">
+                <Link
+                  to="/admin/orgs"
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors text-amber-600 dark:text-amber-400 hover:bg-amber-500/10",
+                    collapsed && "justify-center px-0"
+                  )}
+                >
+                  <Settings className="h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                  {!collapsed && <span className="flex-1">Admin Portal</span>}
+                </Link>
+              </div>
+            </div>
+          )}
         </nav>
       </ScrollArea>
 
@@ -392,6 +424,17 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               <User className="h-4 w-4" />
               Profile
             </Link>
+
+            {isPlatformAdmin && (
+              <Link
+                to="/admin/orgs"
+                onClick={() => setAccountOpen(false)}
+                className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm hover:bg-muted/60 transition-colors text-amber-600 dark:text-amber-400 font-semibold animate-pulse-slow"
+              >
+                <Settings className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                Admin Portal
+              </Link>
+            )}
 
             {/* Theme sub-section */}
             <div className="px-2 py-1.5">

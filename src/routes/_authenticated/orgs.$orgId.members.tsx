@@ -634,7 +634,7 @@ function OrgMembersPage() {
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-foreground">{inv.email}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            Invited on {new Date(inv.created_at).toLocaleDateString()}
+                            Invited on {new Date(inv.created_at).toLocaleDateString()} · Expires {new Date(new Date(inv.created_at).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex items-center gap-4">

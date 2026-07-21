@@ -42,18 +42,29 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Account created. You can sign in now.");
-        setMode("signin");
+        
+        if (data.user && !data.session) {
+          toast.info("Please verify your email before signing in.");
+          navigate({ to: "/verify-email" });
+        } else {
+          toast.success("Account created. You can sign in now.");
+          setMode("signin");
+        }
       } else if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: redirectUrl || "/" });
+        
+        if (data.user && !data.user.email_confirmed_at) {
+          navigate({ to: "/verify-email" });
+        } else {
+          navigate({ to: redirectUrl || "/" });
+        }
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: window.location.origin + "/auth/reset-password",

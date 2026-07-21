@@ -155,6 +155,24 @@ function OrgSettings() {
           </div>
         </Card>
 
+        <Card className="mt-6 p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                Telephony & Numbers
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Configure Plivo/Exotel credentials and assign caller-ID phone numbers.
+              </p>
+            </div>
+            <Button asChild variant="outline">
+              <Link to="/orgs/$orgId/telephony" params={{ orgId }}>
+                Manage Telephony
+              </Link>
+            </Button>
+          </div>
+        </Card>
+
         {!roleLoading && role && (
           <Card className="mt-6 border-destructive/40 p-6">
             <h2 className="text-sm font-medium uppercase tracking-wide text-destructive">
