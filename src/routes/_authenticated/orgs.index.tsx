@@ -59,6 +59,14 @@ function OrgPicker() {
       navigate({ to: "/onboarding" });
       return;
     }
+
+    // Direct land on organization dashboard
+    const firstOrgId = data[0]?.org_id;
+    if (firstOrgId) {
+      navigate({ to: `/orgs/${firstOrgId}` });
+      return;
+    }
+
     setOrgs(data ?? []);
   }
 
