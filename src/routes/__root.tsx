@@ -75,24 +75,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-function PendingComponent() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-3">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          src="/brand/KzunoLoading.mp4"
-          className="h-16 w-16 object-contain"
-        />
-        <span className="text-xs font-mono text-muted-foreground animate-pulse">Loading Kzuno...</span>
-      </div>
-    </div>
-  );
-}
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -106,11 +88,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       {
-        rel: "icon",
-        type: "image/png",
-        href: "/brand/green_waveform_pure_transparent.png",
-      },
-      {
         rel: "stylesheet",
         href: appCss,
       },
@@ -118,7 +95,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  pendingComponent: PendingComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
@@ -130,7 +106,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
         <script dangerouslySetInnerHTML={{ __html: `
           (function () {
             try {

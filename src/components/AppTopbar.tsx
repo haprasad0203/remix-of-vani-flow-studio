@@ -10,6 +10,7 @@ import {
   Search,
   Sun,
   Moon,
+  Mic,
 } from "lucide-react";
 
 type AppTopbarProps = {
