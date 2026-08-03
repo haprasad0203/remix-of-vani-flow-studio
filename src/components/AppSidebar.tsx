@@ -38,7 +38,6 @@ import {
   LogOut,
   User,
   Palette,
-  Mic,
   Sun,
   Moon,
   Monitor,
@@ -212,9 +211,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 collapsed && "justify-center px-0"
               )}
             >
-              <span className="grid place-items-center w-8 h-8 rounded-[10px] bg-primary text-white shadow-sm shrink-0">
-                <Mic className="h-4 w-4" />
-              </span>
+              <img src="/brand/kzuno_icon.png" alt="Kzuno" className="h-7 w-7 object-contain shrink-0" />
               {!collapsed && (
                 <>
                   <div className="flex-1 min-w-0">
