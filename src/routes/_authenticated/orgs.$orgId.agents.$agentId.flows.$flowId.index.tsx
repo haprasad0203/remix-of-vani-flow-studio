@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { logAuditEvent } from "@/lib/audit-logger";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -33,7 +34,8 @@ import {
   nodeSummary,
 } from "@/lib/flow-types";
 import { StepConfig } from "@/components/flow-editor/StepConfig";
-import { ChevronDown, ChevronUp, Trash2, ArrowUp, ArrowDown, Plus, GitBranch, AlertCircle, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { FlowSimulationDrawer } from "@/components/FlowSimulationDrawer";
+import { ChevronDown, ChevronUp, Trash2, ArrowUp, ArrowDown, Plus, GitBranch, AlertCircle, AlertTriangle, CheckCircle2, Play } from "lucide-react";
 import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute(
@@ -67,6 +69,7 @@ function FlowEditor() {
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [flowMapOpen, setFlowMapOpen] = useState(false);
+  const [simulationOpen, setSimulationOpen] = useState(false);
 
   const getFlowMapNodes = (draft: FlowDraft): { node: FlowNode; index: number }[] => {
     return draft.nodes.map((node, index) => ({ node, index }));
@@ -334,6 +337,7 @@ function FlowEditor() {
       return;
     }
     setSavedDraft(draft);
+    logAuditEvent(orgId, "flow.draft_saved", "flow", flowId, { name: flow?.name });
     toast.success("Draft saved");
   }
 
@@ -379,6 +383,7 @@ function FlowEditor() {
       if (uerr) throw uerr;
       setPublishedJson(draft);
       setPublishedVersionNumber(created.version_number);
+      logAuditEvent(orgId, "flow.published", "flow", flowId, { name: flow?.name, version_number: created.version_number });
       toast.success(`Published v${created.version_number}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Publish failed");
@@ -432,6 +437,15 @@ function FlowEditor() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSimulationOpen(true)}
+              className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+            >
+              <Play className="h-3.5 w-3.5 fill-primary" />
+              Simulate
+            </Button>
             <Button asChild variant="ghost" size="sm">
               <Link
                 to="/orgs/$orgId/agents/$agentId/flows/$flowId/versions"
@@ -462,6 +476,18 @@ function FlowEditor() {
             )}
           </div>
         </div>
+
+        {/* Interactive Flow Simulation Drawer */}
+        {draft && (
+          <FlowSimulationDrawer
+            isOpen={simulationOpen}
+            onClose={() => setSimulationOpen(false)}
+            draft={draft}
+            onSelectNodeOnCanvas={(nodeId) => {
+              setCollapsed((c) => ({ ...c, [nodeId]: false }));
+            }}
+          />
+        )}
 
         {/* Flow-level config */}
         <Card className="mt-6 p-5">

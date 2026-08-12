@@ -43,6 +43,9 @@ import {
   Moon,
   Monitor,
   Check,
+  History,
+  Webhook,
+  Activity,
 } from "lucide-react";
 
 // ─── Nav config ───────────────────────────────────────────
@@ -61,7 +64,55 @@ type NavGroup = {
   items: NavItem[];
 };
 
-function getNavGroups(orgId: string): NavGroup[] {
+function getNavGroups(orgId: string, role?: string, isPlatformAdmin?: boolean): NavGroup[] {
+  const orgItems: NavItem[] = [
+    {
+      label: "Team",
+      icon: Users,
+      to: "/orgs/$orgId/members",
+      matchPrefix: `/orgs/${orgId}/members`,
+    },
+  ];
+
+  if (role !== "viewer") {
+    orgItems.push({
+      label: "Audit Log",
+      icon: History,
+      to: "/orgs/$orgId/audit-log",
+      matchPrefix: `/orgs/${orgId}/audit-log`,
+    });
+    orgItems.push({
+      label: "Integrations",
+      icon: Webhook,
+      to: "/orgs/$orgId/integrations",
+      matchPrefix: `/orgs/${orgId}/integrations`,
+    });
+  }
+
+  if (isPlatformAdmin) {
+    orgItems.push({
+      label: "System Health",
+      icon: Activity,
+      to: "/orgs/$orgId/system-health",
+      matchPrefix: `/orgs/${orgId}/system-health`,
+    });
+  }
+
+  orgItems.push(
+    {
+      label: "Billing",
+      icon: CreditCard,
+      disabled: true,
+      comingSoon: true,
+    },
+    {
+      label: "Settings",
+      icon: Settings,
+      to: "/orgs/$orgId/settings",
+      matchPrefix: `/orgs/${orgId}/settings`,
+    }
+  );
+
   return [
     {
       title: "Overview",
@@ -116,26 +167,7 @@ function getNavGroups(orgId: string): NavGroup[] {
     },
     {
       title: "Organization",
-      items: [
-        {
-          label: "Team",
-          icon: Users,
-          to: "/orgs/$orgId/members",
-          matchPrefix: `/orgs/${orgId}/members`,
-        },
-        {
-          label: "Billing",
-          icon: CreditCard,
-          disabled: true,
-          comingSoon: true,
-        },
-        {
-          label: "Settings",
-          icon: Settings,
-          to: "/orgs/$orgId/settings",
-          matchPrefix: `/orgs/${orgId}/settings`,
-        },
-      ],
+      items: orgItems,
     },
   ];
 }
@@ -175,7 +207,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   }, []);
 
   const currentOrg = orgs.find((o) => o.org_id === orgId);
-  const navGroups = orgId ? getNavGroups(orgId) : [];
+  const navGroups = orgId ? getNavGroups(orgId, role, isPlatformAdmin) : [];
   const initial = email ? email.charAt(0).toUpperCase() : "U";
 
   // Check if a nav item is active by matching against current route
@@ -212,8 +244,9 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 collapsed && "justify-center px-0"
               )}
             >
-              <span className="grid place-items-center w-8 h-8 rounded-[10px] bg-primary text-white shadow-sm shrink-0">
-                <Mic className="h-4 w-4" />
+              <span className="grid place-items-center w-8 h-8 rounded-[10px] bg-primary/10 border border-primary/20 shadow-sm shrink-0 overflow-hidden p-1">
+                <img src="/brand/kzuno_icon_green.png" alt="" className="h-6 w-6 object-contain dark:hidden" />
+                <img src="/brand/kzuno_icon_white.png" alt="" className="h-6 w-6 object-contain hidden dark:block" />
               </span>
               {!collapsed && (
                 <>

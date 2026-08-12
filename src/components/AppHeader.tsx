@@ -34,15 +34,19 @@ export function AppHeader({
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/70 backdrop-blur-md border-border/40 transition-colors">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-3.5 text-sm">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="grid place-items-center w-8 h-8 rounded-[10px] bg-primary text-white shadow-sm group-hover:scale-105 transition-all duration-200">
-              <Mic className="h-4.5 w-4.5" />
-            </span>
-            <span className="font-display font-bold text-[19px] tracking-tight text-foreground transition-colors group-hover:text-primary">
-              Kzuno
-            </span>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
+        <div className="flex items-center gap-4 text-sm">
+          <Link to="/" className="flex items-center group shrink-0 py-0.5">
+            <img
+              src="/brand/kzuno_logo_green.png"
+              alt="KZUNO"
+              className="h-11 sm:h-13 md:h-14 w-auto object-contain dark:hidden transition-transform duration-200 group-hover:scale-[1.02]"
+            />
+            <img
+              src="/brand/kzuno_logo_white.png"
+              alt="KZUNO"
+              className="h-11 sm:h-13 md:h-14 w-auto object-contain hidden dark:block transition-transform duration-200 group-hover:scale-[1.02]"
+            />
           </Link>
           {breadcrumbs?.map((b, i) => (
             <span key={i} className="flex items-center gap-2 text-muted-foreground animate-in slide-in-from-left-2 duration-200">
