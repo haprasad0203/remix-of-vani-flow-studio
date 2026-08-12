@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { NotificationPreferencesTab } from "@/components/NotificationPreferencesTab";
-import { AppHeader } from "@/components/AppHeader";
 import { useOrgRole } from "@/hooks/useOrgRole";
 
 export const Route = createFileRoute("/_authenticated/orgs/$orgId/settings")({

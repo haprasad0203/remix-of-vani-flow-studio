@@ -21,7 +21,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { AppHeader } from "@/components/AppHeader";
 import {
   FlowDraft,
   FlowNode,

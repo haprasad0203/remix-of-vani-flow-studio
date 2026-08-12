@@ -52,11 +52,7 @@ type AgentStat = {
   avgDuration: number;
 };
 
-function formatDuration(seconds: number): string {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-}
+import { formatDuration } from "@/lib/utils";
 
 function AnalyticsPage() {
   const { orgId } = Route.useParams() as any;

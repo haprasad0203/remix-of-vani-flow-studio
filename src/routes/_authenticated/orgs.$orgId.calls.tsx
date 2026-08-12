@@ -58,6 +58,8 @@ type CallRow = {
   };
 };
 
+import { maskPhoneNumber, formatDuration } from "@/lib/utils";
+
 const STATUS_OPTIONS = [
   { value: "all", label: "All Statuses", variant: "outline" as const },
   { value: "in_progress", label: "In Progress", variant: "secondary" as const },
@@ -66,20 +68,6 @@ const STATUS_OPTIONS = [
   { value: "missed", label: "Missed", variant: "outline" as const },
   { value: "no_answer", label: "No Answer", variant: "outline" as const },
 ];
-
-function formatDuration(seconds: number | null): string {
-  if (seconds === null || seconds === undefined) return "—";
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-}
-
-function maskPhoneNumber(num: string) {
-  if (!num) return "—";
-  const cleaned = num.trim();
-  if (cleaned.length <= 4) return cleaned;
-  return cleaned.substring(0, cleaned.length - 4).replace(/\d/g, "•") + cleaned.substring(cleaned.length - 4);
-}
 
 function CallsPage() {
   const { orgId } = Route.useParams() as any;

@@ -3,7 +3,6 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AppHeader } from "@/components/AppHeader";
 import { useOrgRole } from "@/hooks/useOrgRole";
 import { Users, ArrowLeft, MoreVertical, Check, AlertCircle, Copy, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

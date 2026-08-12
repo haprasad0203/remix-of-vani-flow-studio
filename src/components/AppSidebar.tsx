@@ -1,4 +1,4 @@
-import { Link, useParams, useMatches } from "@tanstack/react-router";
+import { Link, useParams, useMatches, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -180,6 +180,7 @@ type AppSidebarProps = {
 };
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
+  const navigate = useNavigate();
   const { orgId } = useParams({ strict: false }) as { orgId?: string };
   const { orgs, loading: orgsLoading } = useUserOrgs();
   const { role } = useOrgRole(orgId);
@@ -224,7 +225,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
 
   async function signOut() {
     await supabase.auth.signOut();
-    window.location.href = "/auth";
+    navigate({ to: "/auth", replace: true });
   }
 
   return (

@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrgRole } from "@/hooks/useOrgRole";
-import { AppHeader } from "@/components/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -339,7 +338,6 @@ function WebhookIntegrationsPage() {
   if (!roleLoading && role === "viewer") {
     return (
       <div className="min-h-screen bg-background">
-        <AppHeader breadcrumbs={[{ label: "Integrations" }]} />
         <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive mb-4">
             <ShieldAlert className="h-6 w-6" />
@@ -358,8 +356,6 @@ function WebhookIntegrationsPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
-      <AppHeader breadcrumbs={[{ label: "Integrations & Webhooks" }]} />
-
       <main className="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6">
         {/* Title Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-5">
